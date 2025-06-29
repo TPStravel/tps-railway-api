@@ -10,6 +10,8 @@ import nodemailer from 'nodemailer';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+const fs = require('fs');
+
 // ==================== CONFIGURAÇÃO ====================
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -602,7 +604,7 @@ app.post('/api/send-verification', async (req, res) => {
       from: `"TPS Travel System" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: '🔐 TPS Travel - Verify Your Email Address',
-      html: require('fs').readFileSync('./verification-template.html', 'utf8')
+      html: fs.readFileSync('./verification-template.html', 'utf8')
         .replace('{{USER_NAME}}', name)
         .replace('{{VERIFICATION_TOKEN}}', token)
         .replace('{{USER_EMAIL}}', email)
