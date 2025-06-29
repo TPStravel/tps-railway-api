@@ -602,7 +602,11 @@ app.post('/api/send-verification', async (req, res) => {
       from: `"TPS Travel System" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: '🔐 TPS Travel - Verify Your Email Address',
-      html: generateVerificationEmailHTML(name, token, origin)
+      html: require('fs').readFileSync('./verification-template.html', 'utf8')
+        .replace('{{USER_NAME}}', name)
+        .replace('{{VERIFICATION_TOKEN}}', token)
+        .replace('{{USER_EMAIL}}', email)
+        .replace('{{VERIFICATION_LINK}}', origin + '/verify?token=' + token)
     };
 
     const info = await transporter.sendMail(mailOptions);

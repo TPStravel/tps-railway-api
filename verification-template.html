@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS Email Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .verification-box {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin: 30px 0;
+            border: 2px dashed #d1d5db;
+        }
+        
+        .verification-code {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: bold;
+            color: #4f46e5;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            display: inline-block;
+            letter-spacing: 3px;
+            margin: 10px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.4);
+        }
+        
+        .security-notice {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        
+        .security-notice h4 {
+            color: #d97706;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .security-notice p {
+            color: #92400e;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .footer {
+            background: #f9fafb;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #4f46e5;
+            margin-bottom: 15px;
+        }
+        
+        .footer-text {
+            color: #6b7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .social-links {
+            margin: 15px 0;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #4f46e5;
+        }
+        
+        .unsubscribe {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-top: 20px;
+        }
+        
+        .unsubscribe a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .footer {
+                padding: 25px 20px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+            
+            .greeting {
+                font-size: 22px;
+            }
+            
+            .verification-code {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .content {
+                background: #1f2937;
+            }
+            
+            .greeting {
+                color: #f9fafb;
+            }
+            
+            .message {
+                color: #d1d5db;
+            }
+            
+            .footer {
+                background: #111827;
+                border-top-color: #374151;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">TPS</div>
+            <div class="tagline">Travel Portal System</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <div class="greeting">Olá, {{USER_NAME}}! 👋</div>
+            
+            <div class="message">
+                Obrigado por se registrar no <strong>TPS Travel Portal</strong>! Para concluir seu cadastro e garantir a segurança da sua conta, precisamos verificar seu endereço de email.
+            </div>
+            
+            <!-- Verification Section -->
+            <div class="verification-box">
+                <h3 style="margin: 0 0 15px 0; color: #374151;">Seu Código de Verificação</h3>
+                <div class="verification-code">{{VERIFICATION_TOKEN}}</div>
+                <p style="margin: 15px 0 0 0; color: #6b7280; font-size: 14px;">
+                    Este código expira em 15 minutos
+                </p>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{VERIFICATION_LINK}}" class="cta-button">
+                    ✅ Verificar Minha Conta
+                </a>
+            </div>
+            
+            <!-- Security Notice -->
+            <div class="security-notice">
+                <h4>🔒 Aviso de Segurança</h4>
+                <p>
+                    Se você não solicitou esta verificação, ignore este email. 
+                    Nunca compartilhe este código com terceiros.
+                </p>
+            </div>
+            
+            <div class="message">
+                <strong>Próximos passos:</strong><br>
+                1. Clique no botão acima ou insira o código manualmente<br>
+                2. Complete seu perfil de viajante<br>
+                3. Explore nossas ofertas exclusivas!
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-logo">TPS Travel Portal</div>
+            <div class="footer-text">
+                Conectando você às melhores experiências de viagem<br>
+                <strong>Canal Vivo</strong> - Sua jornada começa aqui
+            </div>
+            
+            <div class="social-links">
+                <a href="#">📧 Contato</a>
+                <a href="#">🌐 Website</a>
+                <a href="#">📱 App Mobile</a>
+            </div>
+            
+            <div class="unsubscribe">
+                Este email foi enviado para {{USER_EMAIL}}<br>
+                <a href="#">Cancelar assinatura</a> | <a href="#">Atualizar preferências</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
