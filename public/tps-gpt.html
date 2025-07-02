@@ -624,7 +624,7 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        // FUNÇÃO PRINCIPAL - SÓ CHAMA API REAL
+        // FUNÇÃO PRINCIPAL - CORRIGIDA COM URL DO RAILWAY
         async function sendMessage() {
             if (isProcessing) return;
             
@@ -648,7 +648,7 @@
             try {
                 console.log('🚀 Calling Railway API:', message);
                 
-                // CHAMA APENAS A API REAL DO RAILWAY
+                // ✅ URL CORRIGIDA DO RAILWAY
                 const response = await fetch("https://tps-railway-api-production.up.railway.app/gpt-tps", {
                     method: "POST",
                     headers: {
