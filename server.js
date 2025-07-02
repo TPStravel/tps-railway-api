@@ -219,16 +219,16 @@ async function callOpenRouterGPT(message, language = 'en') {
 
     const prompt = systemPrompt[language] || systemPrompt['en'];
 
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://canalvivo.org',
         'X-Title': 'TPS Travel Assistant'
       },
       body: JSON.stringify({
-        model: 'deepseek/deepseek-chat',
+        model: 'llama3-8b-8192',
         messages: [
           {
             role: 'system',
