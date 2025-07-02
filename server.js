@@ -265,34 +265,7 @@ async function callOpenRouterGPT(message, language = 'en') {
   } catch (error) {
     console.error('❌ Error calling OpenRouter GPT:', error);
     
-    // Fallback: resposta inteligente baseada na mensagem
-    return getIntelligentFallback(message, language);
-  }
-}
-
-// Sistema de fallback inteligente
-function getIntelligentFallback(message, language = 'en') {
-  const lowerMessage = message.toLowerCase();
-
-  const responses = {
-    'en': {
-      paris: `🗼 **Paris Travel Plan**\n\nPerfect choice! Paris offers incredible experiences year-round.\n\n**Flight Tips:** Book 2-3 months ahead for best prices. Direct flights available from major cities.\n\n**Best Areas to Stay:**\n• Marais - Historic charm, great restaurants\n• Saint-Germain - Art galleries, café culture\n• Montmartre - Artistic atmosphere, Sacré-Cœur\n\n**Must-See:**\n• Eiffel Tower (book skip-the-line tickets)\n• Louvre Museum (pre-book timed entry)\n• Seine River cruise at sunset\n• Champs-Élysées shopping\n\n**Local Tips:**\n• Metro day pass: €8\n• Many museums free first Sunday of month\n• Dinner reservations essential\n\nReady to help with specific dates and bookings! ✨`,
-      
-      default: `✨ **Welcome to TPS Travel!**\n\nI'm here to help plan your perfect trip! I can assist with:\n\n🗺️ **Complete Itinerary Planning**\n✈️ **Flight Recommendations**\n🏨 **Hotel Bookings**\n🚗 **Local Transportation**\n🛡️ **Travel Insurance**\n🎫 **Activities & Tours**\n\n**To get started, tell me:**\n• Your dream destination\n• Travel dates\n• Number of travelers\n• Budget range\n\nLet's turn your travel dreams into reality! 🌟`
-    },
-    'pt': {
-      paris: `🗼 **Plano de Viagem - Paris**\n\nExcelente escolha! Paris oferece experiências incríveis o ano todo.\n\n**Dicas de Voo:** Reserve 2-3 meses antes para melhores preços. Voos diretos disponíveis das principais cidades.\n\n**Melhores Áreas para Ficar:**\n• Marais - Charme histórico, ótimos restaurantes\n• Saint-Germain - Galerias de arte, cultura de café\n• Montmartre - Atmosfera artística, Sacré-Cœur\n\n**Imperdíveis:**\n• Torre Eiffel (reserve ingressos furarfila)\n• Museu do Louvre (reserve entrada com hora marcada)\n• Cruzeiro no Rio Sena ao pôr do sol\n• Compras na Champs-Élysées\n\n**Dicas Locais:**\n• Passe diário do metrô: €8\n• Muitos museus gratuitos no primeiro domingo do mês\n• Reservas para jantar essenciais\n\nPronto para ajudar com datas específicas e reservas! ✨`,
-      
-      default: `✨ **Bem-vindo ao TPS Travel!**\n\nEstou aqui para ajudar a planejar sua viagem perfeita! Posso auxiliar com:\n\n🗺️ **Planejamento Completo de Itinerário**\n✈️ **Recomendações de Voos**\n🏨 **Reservas de Hotéis**\n🚗 **Transporte Local**\n🛡️ **Seguro Viagem**\n🎫 **Atividades e Tours**\n\n**Para começar, me conte:**\n• Seu destino dos sonhos\n• Datas da viagem\n• Número de viajantes\n• Faixa de orçamento\n\nVamos transformar seus sonhos de viagem em realidade! 🌟`
     }
-  };
-
-  const langResponses = responses[language] || responses['en'];
-
-  if (lowerMessage.includes('paris')) return langResponses.paris;
-  if (lowerMessage.includes('new york')) return langResponses.paris?.replace('Paris', 'New York').replace('🗼', '🗽');
-  
-  return langResponses.default;
 }
 
 // Routes
@@ -343,13 +316,9 @@ app.post('/gpt-tps', async (req, res) => {
   } catch (error) {
     console.error('❌ Error in GPT endpoint:', error);
 
-    // Fallback automático
-    const fallbackResponse = getIntelligentFallback(req.body.message || '', req.body.language || 'en');
-
-    res.status(200).json({
-      content: fallbackResponse,
-      timestamp: new Date().toISOString(),
-      language: req.body.language || 'en'
+    res.status(500).json({
+      error: 'GPT service failed',
+      details: error.message
     });
   }
 });
