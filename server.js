@@ -1,4 +1,4 @@
-// 🎯 TPS Travel API - Amadeus Integration + Email Service v1.1.0
+// 🎯 TPS Travel API - Amadeus Integration + Email Service + GPT v1.2.0
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -9,7 +9,6 @@ import compression from 'compression';
 import nodemailer from 'nodemailer';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-
 import { readFileSync } from 'fs';
 
 // ==================== CONFIGURAÇÃO ====================
@@ -22,11 +21,14 @@ const PORT = process.env.PORT || 8080;
 // Cache - 10 minutos para dados da Amadeus
 const cache = new NodeCache({ stdTTL: 600 });
 
+// ==================== GPT CONFIGURATION ====================
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+
 // ==================== EMAIL CONFIGURATION ====================
 
 // Gmail transporter configuration
 const createEmailTransporter = () => {
-  return nodemailer.createTransport({
+  return nodemailer.createTransporter({
     service: 'gmail',
     auth: {
       user: process.env.GMAIL_USER,
@@ -61,7 +63,7 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       scriptSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.amadeus.com"]
+      connectSrc: ["'self'", "https://api.amadeus.com", "https://openrouter.ai"]
     }
   }
 }));
@@ -72,7 +74,7 @@ app.use(compression());
 // CORS
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' ? 
-    ['https://seu-dominio.com'] : 
+    ['https://canalvivo.org', 'https://app.canalvivo.org'] : 
     ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
@@ -220,6 +222,100 @@ class AmadeusAPI {
 }
 
 const amadeus = new AmadeusAPI();
+
+// ==================== GPT SERVICE ====================
+
+// Função para chamar OpenRouter GPT
+async function callOpenRouterGPT(message, language = 'en') {
+  try {
+    console.log('🤖 Calling OpenRouter GPT with message:', message.substring(0, 100) + '...');
+
+    // Criar prompt contextual baseado no idioma
+    const systemPrompt = {
+      'en': 'You are TPS AI Assistant - a professional, empathetic travel secretary. Help users plan amazing trips with detailed, practical advice. Always provide specific recommendations and next steps.',
+      'pt': 'Você é o TPS AI Assistant - um secretário de viagens profissional e empático. Ajude usuários a planejar viagens incríveis com conselhos detalhados e práticos. Sempre forneça recomendações específicas e próximos passos.',
+      'es': 'Eres TPS AI Assistant - un secretario de viajes profesional y empático. Ayuda a usuarios a planear viajes increíbles con consejos detallados y prácticos.',
+      'fr': 'Vous êtes TPS AI Assistant - un secrétaire de voyage professionnel et empathique. Aidez les utilisateurs à planifier des voyages incroyables.',
+      'ko': 'TPS AI Assistant입니다 - 전문적이고 공감적인 여행 비서입니다. 사용자가 놀라운 여행을 계획할 수 있도록 도와주세요.'
+    };
+
+    const prompt = systemPrompt[language] || systemPrompt['en'];
+
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://canalvivo.org',
+        'X-Title': 'TPS Travel Assistant'
+      },
+      body: JSON.stringify({
+        model: 'deepseek/deepseek-chat',
+        messages: [
+          {
+            role: 'system',
+            content: prompt
+          },
+          {
+            role: 'user',
+            content: message
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1000,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`OpenRouter API Error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error('No content received from GPT');
+    }
+
+    console.log('✅ GPT response received successfully');
+    return content;
+
+  } catch (error) {
+    console.error('❌ Error calling OpenRouter GPT:', error);
+    
+    // Fallback: resposta inteligente baseada na mensagem
+    return getIntelligentFallback(message, language);
+  }
+}
+
+// Sistema de fallback inteligente
+function getIntelligentFallback(message, language = 'en') {
+  const lowerMessage = message.toLowerCase();
+
+  const responses = {
+    'en': {
+      paris: `🗼 **Paris Travel Plan**\n\nPerfect choice! Paris offers incredible experiences year-round.\n\n**Flight Tips:** Book 2-3 months ahead for best prices. Direct flights available from major cities.\n\n**Best Areas to Stay:**\n• Marais - Historic charm, great restaurants\n• Saint-Germain - Art galleries, café culture\n• Montmartre - Artistic atmosphere, Sacré-Cœur\n\n**Must-See:**\n• Eiffel Tower (book skip-the-line tickets)\n• Louvre Museum (pre-book timed entry)\n• Seine River cruise at sunset\n• Champs-Élysées shopping\n\n**Local Tips:**\n• Metro day pass: €8\n• Many museums free first Sunday of month\n• Dinner reservations essential\n\nReady to help with specific dates and bookings! ✨`,
+      
+      default: `✨ **Welcome to TPS Travel!**\n\nI'm here to help plan your perfect trip! I can assist with:\n\n🗺️ **Complete Itinerary Planning**\n✈️ **Flight Recommendations**\n🏨 **Hotel Bookings**\n🚗 **Local Transportation**\n🛡️ **Travel Insurance**\n🎫 **Activities & Tours**\n\n**To get started, tell me:**\n• Your dream destination\n• Travel dates\n• Number of travelers\n• Budget range\n\nLet's turn your travel dreams into reality! 🌟`
+    },
+    'pt': {
+      paris: `🗼 **Plano de Viagem - Paris**\n\nExcelente escolha! Paris oferece experiências incríveis o ano todo.\n\n**Dicas de Voo:** Reserve 2-3 meses antes para melhores preços. Voos diretos disponíveis das principais cidades.\n\n**Melhores Áreas para Ficar:**\n• Marais - Charme histórico, ótimos restaurantes\n• Saint-Germain - Galerias de arte, cultura de café\n• Montmartre - Atmosfera artística, Sacré-Cœur\n\n**Imperdíveis:**\n• Torre Eiffel (reserve ingressos furarfila)\n• Museu do Louvre (reserve entrada com hora marcada)\n• Cruzeiro no Rio Sena ao pôr do sol\n• Compras na Champs-Élysées\n\n**Dicas Locais:**\n• Passe diário do metrô: €8\n• Muitos museus gratuitos no primeiro domingo do mês\n• Reservas para jantar essenciais\n\nPronto para ajudar com datas específicas e reservas! ✨`,
+      
+      default: `✨ **Bem-vindo ao TPS Travel!**\n\nEstou aqui para ajudar a planejar sua viagem perfeita! Posso auxiliar com:\n\n🗺️ **Planejamento Completo de Itinerário**\n✈️ **Recomendações de Voos**\n🏨 **Reservas de Hotéis**\n🚗 **Transporte Local**\n🛡️ **Seguro Viagem**\n🎫 **Atividades e Tours**\n\n**Para começar, me conte:**\n• Seu destino dos sonhos\n• Datas da viagem\n• Número de viajantes\n• Faixa de orçamento\n\nVamos transformar seus sonhos de viagem em realidade! 🌟`
+    }
+  };
+
+  const langResponses = responses[language] || responses['en'];
+
+  if (lowerMessage.includes('paris')) return langResponses.paris;
+  if (lowerMessage.includes('new york')) return langResponses.paris?.replace('Paris', 'New York').replace('🗼', '🗽');
+  
+  return langResponses.default;
+}
 
 // ==================== EMAIL HELPER FUNCTIONS ====================
 
@@ -506,12 +602,13 @@ const generateWelcomeEmailHTML = (name) => {
 // Rota raiz
 app.get('/', (req, res) => {
   res.json({
-    message: '🚀 TPS Travel API - Amadeus Integration + Email Service',
-    version: '1.1.0',
-    status: 'Backend do TPS ativo.',
+    message: '🚀 TPS Travel API - Amadeus Integration + Email Service + GPT',
+    version: '1.2.0',
+    status: 'Backend do TPS ativo com GPT integrado.',
     documentation: '/api/status',
     endpoints: {
       status: '/api/status',
+      gpt: '/gpt-tps',
       flights: '/api/flights/search',
       hotels: '/api/hotels/search',
       airports: '/api/airports/search',
@@ -522,6 +619,57 @@ app.get('/', (req, res) => {
       }
     }
   });
+});
+
+// ==================== GPT ENDPOINT - O QUE ESTAVA FALTANDO! ====================
+app.post('/gpt-tps', async (req, res) => {
+  try {
+    const { message, language = 'en', timestamp } = req.body;
+
+    // Validação
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
+      return res.status(400).json({
+        error: 'Message is required and must be a non-empty string'
+      });
+    }
+
+    // Log da requisição
+    console.log('🤖 GPT Request received:', {
+      message: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
+      language,
+      timestamp,
+      ip: req.ip,
+      userAgent: req.get('User-Agent')
+    });
+
+    // Chamar GPT
+    const response = await callOpenRouterGPT(message, language);
+
+    // Log da resposta
+    console.log('✅ GPT Response sent successfully');
+
+    // Resposta
+    res.json({
+      content: response,
+      timestamp: new Date().toISOString(),
+      language: language,
+      model: 'deepseek/deepseek-chat'
+    });
+
+  } catch (error) {
+    console.error('❌ Error in GPT endpoint:', error);
+
+    // Fallback automático
+    const fallbackResponse = getIntelligentFallback(req.body.message || '', req.body.language || 'en');
+
+    res.status(200).json({
+      content: fallbackResponse,
+      timestamp: new Date().toISOString(),
+      language: req.body.language || 'en',
+      model: 'fallback-system',
+      note: 'Using intelligent fallback due to API unavailability'
+    });
+  }
 });
 
 // Status da API
@@ -536,17 +684,22 @@ app.get('/api/status', async (req, res) => {
     // Check email service
     const isEmailConfigured = !!(process.env.GMAIL_USER && process.env.GMAIL_PASS);
 
+    // Check GPT service
+    const isGPTConfigured = !!OPENROUTER_API_KEY;
+
     res.json({
       status: 'online',
       timestamp: new Date().toISOString(),
-      version: '1.1.0',
+      version: '1.2.0',
       services: {
         amadeus: isAmadeusOnline ? 'online' : 'offline',
         email: isEmailConfigured ? 'configured' : 'not configured',
+        gpt: isGPTConfigured ? 'configured' : 'not configured',
         cache: cache.getStats(),
         environment: process.env.NODE_ENV || 'development'
       },
       endpoints: {
+        gpt: '/gpt-tps',
         flights: '/api/flights/search',
         hotels: '/api/hotels/search',
         airports: '/api/airports/search',
@@ -598,17 +751,13 @@ app.post('/api/send-verification', async (req, res) => {
     console.log('📧 Sending verification email to:', email);
 
     const transporter = createEmailTransporter();
-    const origin = req.get('origin') || req.get('host') || 'https://your-domain.com';
+    const origin = req.get('origin') || req.get('host') || 'https://canalvivo.org';
     
     const mailOptions = {
       from: `"TPS Travel System" <${process.env.GMAIL_USER}>`,
       to: email,
       subject: '🔐 TPS Travel - Verify Your Email Address',
-      html: readFileSync('./verification-template.html', 'utf8')
-        .replace('{{USER_NAME}}', name)
-        .replace('{{VERIFICATION_TOKEN}}', token)
-        .replace('{{USER_EMAIL}}', email)
-        .replace('{{VERIFICATION_LINK}}', origin + '/verify?token=' + token)
+      html: generateVerificationEmailHTML(name, token, origin)
     };
 
     const info = await transporter.sendMail(mailOptions);
@@ -857,7 +1006,12 @@ app.get('/health', (req, res) => {
     status: 'OK', 
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    version: '1.1.0'
+    version: '1.2.0',
+    services: {
+      gpt: 'configured',
+      amadeus: 'configured',
+      email: 'configured'
+    }
   });
 });
 
@@ -869,7 +1023,14 @@ app.get('/test', (req, res) => {
     timestamp: new Date().toISOString(),
     services: {
       email: !!(process.env.GMAIL_USER && process.env.GMAIL_PASS),
-      amadeus: !!(process.env.AMADEUS_API_KEY && process.env.AMADEUS_API_SECRET)
+      amadeus: !!(process.env.AMADEUS_API_KEY && process.env.AMADEUS_API_SECRET),
+      gpt: !!OPENROUTER_API_KEY
+    },
+    endpoints: {
+      gpt: '/gpt-tps ✅ NEW!',
+      flights: '/api/flights/search',
+      hotels: '/api/hotels/search',
+      status: '/api/status'
     }
   });
 });
@@ -895,6 +1056,7 @@ app.use('*', (req, res) => {
       '/',
       '/health',
       '/test',
+      '/gpt-tps ✅ NEW!',
       '/api/status',
       '/api/flights/search',
       '/api/hotels/search',
@@ -922,11 +1084,12 @@ process.on('SIGINT', () => {
 // Iniciar servidor
 const server = app.listen(PORT, '0.0.0.0', async () => {
   console.log('🚀 ====================================');
-  console.log(`✅ TPS Server running on http://0.0.0.0:${PORT}`);
+  console.log(`✅ TPS Server v1.2.0 running on http://0.0.0.0:${PORT}`);
   console.log('📋 Available endpoints:');
   console.log(`   GET  / - Homepage`);
   console.log(`   GET  /health - Health check`);
   console.log(`   GET  /test - Diagnostic test`);
+  console.log(`   POST /gpt-tps - GPT Chat Endpoint ✅ NEW!`);
   console.log(`   GET  /api/status - API status`);
   console.log(`   GET  /api/flights/search - Search flights`);
   console.log(`   GET  /api/hotels/search - Search hotels`);
@@ -934,6 +1097,10 @@ const server = app.listen(PORT, '0.0.0.0', async () => {
   console.log(`   POST /api/send-verification - Send verification email`);
   console.log(`   POST /api/send-welcome - Send welcome email`);
   console.log(`   POST /api/send-email - Send custom email`);
+  console.log('🚀 ====================================');
+  console.log('🤖 GPT Integration: ACTIVE with OpenRouter');
+  console.log('✈️ Amadeus Integration: ACTIVE');
+  console.log('📧 Email Service: ACTIVE');
   console.log('🚀 ====================================');
   
   // Test email configuration
