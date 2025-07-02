@@ -666,7 +666,8 @@
                     const data = await response.json();
                     console.log('✅ API Response:', data);
                     
-                    const gptResponse = data.content || data.message || "Response received successfully!";
+                    // ✅ CORRIGIDO: Extrair resposta real da IA
+                    const gptResponse = data.content || data.reply?.message || data.message || "⚠️ Conexão temporariamente indisponível";
                     addMessage(gptResponse);
                 } else {
                     throw new Error(`API Error: ${response.status} ${response.statusText}`);
