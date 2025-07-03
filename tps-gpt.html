@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS – Travel Personal Secretary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a3d 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 15, 35, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(79, 70, 229, 0.5);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(79, 70, 229, 0.7);
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(47, 46, 92, 0.9);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 11px;
+            z-index: 1001;
+            color: #00ff88;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: linear-gradient(180deg, rgba(10, 10, 20, 0.98) 0%, rgba(15, 15, 25, 0.98) 100%);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(58, 58, 109, 0.5);
+            overflow-y: auto;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+
+        .language-selector {
+            background: rgba(47, 46, 92, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .language-selector h3 {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .language-selector select {
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid rgba(79, 70, 229, 0.4);
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        .language-selector select option {
+            background: #2f2e5c;
+            color: white;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #888;
+            text-align: center;
+            border-bottom: 2px solid rgba(58, 58, 109, 0.5);
+            padding-bottom: 20px;
+        }
+
+        .sidebar-message {
+            font-size: 14px;
+            color: #ffd700;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .destination-item {
+            transition: all 0.4s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.8), rgba(15, 15, 25, 0.8));
+            position: relative;
+            opacity: 0.8;
+            cursor: pointer;
+        }
+
+        .destination-item:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        .destination-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            filter: brightness(0.6);
+        }
+
+        .destination-item:hover img {
+            filter: brightness(0.7);
+        }
+
+        .destination-item span {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: 11px;
+            color: rgba(170, 170, 170, 0.7);
+            text-align: center;
+            padding: 20px 0 10px;
+            border-top: 1px solid rgba(58, 58, 109, 0.3);
+        }
+
+        .main {
+            flex: 1;
+            background: #000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 60px 20px 20px;
+            min-height: 100vh;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1002;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #3fa3ff;
+            text-shadow: 0 0 25px rgba(63, 163, 255, 0.6);
+            animation: logoGlow 3s ease-in-out infinite alternate;
+            text-align: center;
+        }
+
+        @keyframes logoGlow {
+            from { text-shadow: 0 0 25px rgba(63, 163, 255, 0.6); }
+            to { text-shadow: 0 0 35px rgba(63, 163, 255, 0.8), 0 0 50px rgba(63, 163, 255, 0.4); }
+        }
+
+        .header-tabs {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-button {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 90px;
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b36c8, #4f46e5);
+            transform: translateY(-2px);
+        }
+
+        .chat-container {
+            flex: 1;
+            background: transparent;
+            padding: 0 20px;
+            overflow-y: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            position: absolute;
+            top: 220px;
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding-bottom: 40px;
+        }
+
+        .conversation-line {
+            width: 100%;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 15px;
+            word-wrap: break-word;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .conversation-line.user {
+            color: #b8c5ff;
+        }
+
+        .conversation-line.assistant {
+            color: #ffd700;
+            margin-bottom: 30px;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+
+        .conversation-line.user .message-avatar {
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+        }
+
+        .conversation-line.assistant .message-avatar {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a1a2e;
+        }
+
+        .message-content {
+            flex: 1;
+            padding: 0;
+            background: transparent;
+        }
+
+        .message-header {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .conversation-line.user .message-header {
+            color: #6366f1;
+        }
+
+        .conversation-line.assistant .message-header {
+            color: #ffd700;
+        }
+
+        .message-text {
+            line-height: 1.6;
+        }
+
+        .input-container {
+            position: fixed;
+            bottom: 20px;
+            left: 340px;
+            right: 20px;
+            display: flex;
+            gap: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.99);
+            padding: 8px;
+            border-radius: 18px;
+            border: 1px solid rgba(79, 70, 229, 0.4);
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 14px 18px;
+            min-height: 50px;
+            max-height: 100px;
+            resize: none;
+            border: 2px solid #4f46e5;
+            border-radius: 14px 0 0 14px;
+            background: rgba(26, 26, 46, 0.98);
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            line-height: 1.4;
+            outline: none;
+        }
+
+        .message-input:focus {
+            border-color: #6d63ff;
+        }
+
+        .message-input::placeholder {
+            color: #888;
+        }
+
+        .send-button {
+            width: 90px;
+            background: linear-gradient(135deg, #4f46e5, #6d63ff);
+            border: none;
+            border-radius: 0 14px 14px 0;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                order: 2;
+                padding: 20px 15px;
+                position: relative;
+                max-height: 50vh;
+            }
+
+            .destinations-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 12px;
+            }
+
+            .destination-item img {
+                height: 70px;
+            }
+
+            .main {
+                order: 1;
+                padding: 80px 15px 20px;
+                min-height: 60vh;
+            }
+
+            .input-container {
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+
+            .chat-container {
+                position: absolute;
+                top: 200px;
+                bottom: 100px;
+                left: 15px;
+                right: 15px;
+                transform: none;
+                padding: 0 15px;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="connection-status">🟢 Online</div>
+
+        <div class="sidebar">
+            <!-- SELETOR DE IDIOMAS MOVIDO PARA SIDEBAR -->
+            <div class="language-selector">
+                <h3>🌍 Language / Idioma</h3>
+                <select id="languageSelect">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="pt">🇧🇷 Português</option>
+                    <option value="es">🇪🇸 Español</option>
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="de">🇩🇪 Deutsch</option>
+                    <option value="it">🇮🇹 Italiano</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="ko">🇰🇷 한국어</option>
+                    <option value="zh">🇨🇳 中文</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="ar">🇸🇦 العربية</option>
+                    <option value="hi">🇮🇳 हिन्दी</option>
+                </select>
+            </div>
+
+            <h2>🧭 Destinations that Touch the Soul</h2>
+            
+            <div class="sidebar-message">
+                🌱 Every journey through TPS plants hope and transforms lives. Grateful to be part of this chain of light.
+            </div>
+            
+            <div class="destinations-grid">
+                <div class="destination-item">
+                    <img alt="New York" src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop"/>
+                    <span>New York</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Paris" src="https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=400&h=300&fit=crop"/>
+                    <span>Paris</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Tokyo" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop"/>
+                    <span>Tokyo</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Seoul" src="https://images.unsplash.com/photo-1549693578-d683be217e58?w=400&h=300&fit=crop"/>
+                    <span>Seoul</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="London" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&h=300&fit=crop"/>
+                    <span>London</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="São Paulo" src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&h=300&fit=crop"/>
+                    <span>São Paulo</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Dubai" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop"/>
+                    <span>Dubai</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Barcelona" src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&h=300&fit=crop"/>
+                    <span>Barcelona</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Rome" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=400&h=300&fit=crop"/>
+                    <span>Rome</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Sydney" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"/>
+                    <span>Sydney</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Bangkok" src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&h=300&fit=crop"/>
+                    <span>Bangkok</span>
+                </div>
+                <div class="destination-item">
+                    <img alt="Amsterdam" src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&h=300&fit=crop"/>
+                    <span>Amsterdam</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">Connecting hearts to the world</div>
+        </div>
+
+        <div class="main">
+            <div class="logo-container">
+                <div class="logo">TPS</div>
+            </div>
+
+            <div class="header-tabs">
+                <button class="tab-button active">✈️ Flights</button>
+                <button class="tab-button">🏨 Hotels</button>
+                <button class="tab-button">🚗 Transport</button>
+                <button class="tab-button">🛡️ Insurance</button>
+                <button class="tab-button">🎫 Tickets</button>
+                <button class="tab-button">📦 Packages</button>
+            </div>
+
+            <div class="chat-container" id="chatContainer">
+            </div>
+        </div>
+
+        <div class="input-container">
+            <textarea class="message-input" id="messageInput" placeholder="Tell me about your dream destination..." rows="1"></textarea>
+            <button class="send-button" id="sendButton">
+                <span>Send</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURAÇÕES BÁSICAS
+        let currentLang = 'en';
+        let isProcessing = false;
+
+        const translations = {
+            en: {
+                send: "Send",
+                placeholder: "Tell me about your dream destination...",
+                you: "You",
+                assistant: "TPS Assistant",
+                welcome: "🌟 Welcome to TPS - Your Personal Travel Secretary!\n\nI'm here to help you plan amazing trips with real AI assistance. How can I help you today?"
+            },
+            pt: {
+                send: "Enviar", 
+                placeholder: "Compartilhe seus sonhos de viagem...",
+                you: "Você",
+                assistant: "TPS Assistant",
+                welcome: "🌟 Bem-vindo ao TPS - Sua Secretária Pessoal de Viagens!\n\nEstou aqui para ajudar você a planejar viagens incríveis com assistência real de IA. Como posso ajudar hoje?"
+            },
+            es: {
+                send: "Enviar",
+                placeholder: "Cuéntame sobre tu destino soñado...",
+                you: "Tú",
+                assistant: "TPS Assistant",
+                welcome: "🌟 ¡Bienvenido a TPS - Tu Secretaria Personal de Viajes!\n\n¡Estoy aquí para ayudarte a planificar viajes increíbles con asistencia real de IA. ¿Cómo puedo ayudarte hoy?"
+            },
+            fr: {
+                send: "Envoyer",
+                placeholder: "Parlez-moi de votre destination de rêve...",
+                you: "Vous",
+                assistant: "TPS Assistant",
+                welcome: "🌟 Bienvenue chez TPS - Votre Secrétaire Personnel de Voyage!\n\nJe suis là pour vous aider à planifier des voyages incroyables avec une assistance IA réelle. Comment puis-je vous aider aujourd'hui?"
+            }
+        };
+
+        // FUNÇÕES DE INTERFACE
+        function addMessage(text, isUser = false) {
+            const chatContainer = document.getElementById('chatContainer');
+            if (!chatContainer) return;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'conversation-line ' + (isUser ? 'user' : 'assistant');
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = isUser ? 'U' : 'T';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            const header = document.createElement('div');
+            header.className = 'message-header';
+            const texts = translations[currentLang] || translations['en'];
+            header.textContent = isUser ? texts.you : texts.assistant;
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'message-text';
+            textDiv.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            content.appendChild(header);
+            content.appendChild(textDiv);
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // FUNÇÃO PRINCIPAL - CORRIGIDA COM URL DO RAILWAY
+        async function sendMessage() {
+            if (isProcessing) return;
+            
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            
+            if (!messageInput || !sendButton) return;
+            
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Bloquear interface
+            isProcessing = true;
+            sendButton.disabled = true;
+            sendButton.innerHTML = '<span>...</span>';
+
+            // Mostrar mensagem do usuário
+            addMessage(message, true);
+            messageInput.value = '';
+
+            try {
+                console.log('🚀 Calling Railway API:', message);
+                
+                // ✅ URL CORRIGIDA DO RAILWAY
+                const response = await fetch("https://tps-railway-api-production.up.railway.app/gpt-tps", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": "canal-vivo-tps-2025"
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        language: currentLang,
+                        timestamp: Date.now()
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ API Response:', data);
+                    
+                    // ✅ CORRIGIDO: Extrair resposta real da IA
+                    const gptResponse = data.content || data.reply?.message || data.message || "⚠️ Conexão temporariamente indisponível";
+                    addMessage(gptResponse);
+                } else {
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                addMessage(`❌ **Connection Error**\n\nCouldn't reach the TPS API. Please check:\n• Railway deployment status\n• API endpoint availability\n• Network connection\n\nError: ${error.message}`);
+            } finally {
+                // Reativar interface
+                isProcessing = false;
+                sendButton.disabled = false;
+                const texts = translations[currentLang] || translations['en'];
+                sendButton.innerHTML = '<span>' + texts.send + '</span>';
+            }
+        }
+
+        function updateLanguage(lang) {
+            currentLang = lang;
+            const texts = translations[lang] || translations['en'];
+            
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            
+            if (messageInput) {
+                messageInput.placeholder = texts.placeholder;
+            }
+            
+            if (sendButton && !isProcessing) {
+                sendButton.innerHTML = '<span>' + texts.send + '</span>';
+            }
+        }
+
+        // INICIALIZAÇÃO
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const languageSelect = document.getElementById('languageSelect');
+            
+            if (!messageInput || !sendButton) return;
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function(e) {
+                    updateLanguage(e.target.value);
+                });
+            }
+
+            // Mensagem de boas-vindas
+            setTimeout(() => {
+                const texts = translations[currentLang] || translations['en'];
+                addMessage(texts.welcome);
+            }, 500);
+        });
+    </script>
+</body>
+</html>
