@@ -156,6 +156,7 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
+app.options('*', cors());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -165,7 +166,8 @@ const limiter = rateLimit({
     retryAfter: '15 minutes'
   }
 });
-app.options('*', cors())
+
+
 app.use('/api/', limiter);
 
 app.use(express.json({ limit: '10mb' }));
