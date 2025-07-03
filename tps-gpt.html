@@ -1485,46 +1485,9 @@
             const sendButton = document.getElementById('sendButton');
             
             if (!messageInput || !sendButton) return;
-        // Detectar se usuário quer buscar voos
-            const flightRequest = detectFlightRequest(userMessage);
-            if (flightRequest.isFlightQuery) {
-                console.log('✈️ Detectada busca de voo:', flightRequest);
-                
-                isProcessing = true;
-                sendButton.disabled = true;
-                sendButton.innerHTML = '<span>...</span>';
-                
-                addMessage(userMessage, true);
-                messageInput.value = '';
-                
-                // Mostrar loading
-                addMessage('🔍 Buscando voos reais via Amadeus...', false);
-                
-                try {
-                    // Buscar voos reais
-                    const realFlights = await getRealFlights(
-                        flightRequest.origin,
-                        flightRequest.destination, 
-                        flightRequest.date
-                    );
-                    
-                    // Mostrar resultados
-                    const flightResponse = renderRealFlights(realFlights, flightRequest.origin, flightRequest.destination);
-                    addMessage(flightResponse, false);
-                    
-                } catch (error) {
-                    console.error('❌ Erro ao buscar voos:', error);
-                    addMessage('❌ Erro ao buscar voos. Tente novamente.', false);
-                }
-                
-                // Reativar interface
-                isProcessing = false;
-                sendButton.disabled = false;
-                const texts = translations[currentLang] || translations['en'];
-                sendButton.innerHTML = '<span>' + texts.send + '</span>';
-                return;
+        
             }
-                
+
             const userMessage = messageInput.value.trim();
             if (!userMessage) return;
 
