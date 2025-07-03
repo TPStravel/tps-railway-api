@@ -285,8 +285,6 @@ class AmadeusAPI {
   }
 }
 
-const amadeus = new AmadeusAPI();
-
 // ==================== GPT SERVICE ====================
 
 // Função para chamar OpenRouter GPT
