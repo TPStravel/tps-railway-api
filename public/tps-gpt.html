@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="cache-control" content="max-age=0">
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://hook.us2.make.com; object-src 'none'; connect-src 'self' https://www.google-analytics.com https://hook.us2.make.com https://tps-railway-api-production.up.railway.app;">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS – Travel Personal Secretary</title>
+    
+        <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SCFHQFYGHQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-SCFHQFYGHQ');
+      console.log('🎯 Google Analytics carregado: G-SCFHQFYGHQ');
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TPS – Travel Personal Secretary</title>
     <style>
@@ -402,47 +420,93 @@
                 flex-direction: column;
             }
 
+            .logo {
+                font-size: 28px;
+            }
+
             .sidebar {
                 width: 100%;
                 height: auto;
                 order: 2;
-                padding: 20px 15px;
+                padding: 15px;
                 position: relative;
-                max-height: 50vh;
+                max-height: 40vh;
+                overflow-y: auto;
+            }
+
+            .sidebar-message {
+                font-size: 12px;
+                padding: 15px;
+                margin-bottom: 20px;
             }
 
             .destinations-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: 12px;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
             }
 
             .destination-item img {
-                height: 70px;
+                height: 60px;
+            }
+
+            .destination-item span {
+                font-size: 11px;
+                padding: 8px 4px;
             }
 
             .main {
                 order: 1;
-                padding: 80px 15px 20px;
+                padding: 70px 10px 20px;
                 min-height: 60vh;
             }
 
-            .input-container {
-                left: 15px;
-                right: 15px;
-                bottom: 15px;
+            .header-tabs {
+                top: 70px;
+                left: 10px;
+                right: 10px;
+                gap: 4px;
             }
+
+            .tab-button {
+                padding: 8px 10px;
+                font-size: 10px;
+                min-width: 70px;
+            }
+
+            .input-container {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+            }
+
+            .message-input {
+                font-size: 14px;
+                padding: 12px 15px;
+            }       
 
             .chat-container {
                 position: absolute;
-                top: 200px;
-                bottom: 100px;
-                left: 15px;
-                right: 15px;
+                top: 140px;
+                bottom: 80px;
+                left: 10px;
+                right: 10px;
                 transform: none;
-                padding: 0 15px;
+                padding: 0 10px;
                 margin: 0;
             }
-        }
+
+            .conversation-line {
+                font-size: 14px;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .message-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+}
     </style>
 </head>
 <body>
@@ -450,9 +514,9 @@
         <div class="connection-status">🟢 Online</div>
 
         <div class="sidebar">
-            <!-- SELETOR DE IDIOMAS MOVIDO PARA SIDEBAR -->
+            <!-- SELETOR DE IDIOMAS -->
             <div class="language-selector">
-                <h3>🌍 Language / Idioma</h3>
+                <h3 id="languageTitle">🌍 Language / Idioma</h3>
                 <select id="languageSelect">
                     <option value="en">🇺🇸 English</option>
                     <option value="pt">🇧🇷 Português</option>
@@ -469,64 +533,64 @@
                 </select>
             </div>
 
-            <h2>🧭 Destinations that Touch the Soul</h2>
+            <h2 id="sidebarTitle">🧭 Destinations that Touch the Soul</h2>
             
-            <div class="sidebar-message">
+            <div class="sidebar-message" id="sidebarMessage">
                 🌱 Every journey through TPS plants hope and transforms lives. Grateful to be part of this chain of light.
             </div>
             
             <div class="destinations-grid">
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('New York')">
                     <img alt="New York" src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&h=300&fit=crop"/>
                     <span>New York</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Paris')">
                     <img alt="Paris" src="https://images.unsplash.com/photo-1500916434205-0c77489c6cf7?w=400&h=300&fit=crop"/>
                     <span>Paris</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Tokyo')">
                     <img alt="Tokyo" src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=400&h=300&fit=crop"/>
                     <span>Tokyo</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Seoul')">
                     <img alt="Seoul" src="https://images.unsplash.com/photo-1549693578-d683be217e58?w=400&h=300&fit=crop"/>
                     <span>Seoul</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('London')">
                     <img alt="London" src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&h=300&fit=crop"/>
                     <span>London</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('São Paulo')">
                     <img alt="São Paulo" src="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=400&h=300&fit=crop"/>
                     <span>São Paulo</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Dubai')">
                     <img alt="Dubai" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=400&h=300&fit=crop"/>
                     <span>Dubai</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Barcelona')">
                     <img alt="Barcelona" src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=400&h=300&fit=crop"/>
                     <span>Barcelona</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Rome')">
                     <img alt="Rome" src="https://images.unsplash.com/photo-1531572753322-ad063cecc140?w=400&h=300&fit=crop"/>
                     <span>Rome</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Sydney')">
                     <img alt="Sydney" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"/>
                     <span>Sydney</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Bangkok')">
                     <img alt="Bangkok" src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=400&h=300&fit=crop"/>
                     <span>Bangkok</span>
                 </div>
-                <div class="destination-item">
+                <div class="destination-item" onclick="sendDestinationMessage('Amsterdam')">
                     <img alt="Amsterdam" src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=400&h=300&fit=crop"/>
                     <span>Amsterdam</span>
                 </div>
             </div>
             
-            <div class="sidebar-footer">Connecting hearts to the world</div>
+            <div class="sidebar-footer" id="sidebarFooter">Connecting hearts to the world</div>
         </div>
 
         <div class="main">
@@ -535,12 +599,12 @@
             </div>
 
             <div class="header-tabs">
-                <button class="tab-button active">✈️ Flights</button>
-                <button class="tab-button">🏨 Hotels</button>
-                <button class="tab-button">🚗 Transport</button>
-                <button class="tab-button">🛡️ Insurance</button>
-                <button class="tab-button">🎫 Tickets</button>
-                <button class="tab-button">📦 Packages</button>
+                <button class="tab-button active" id="flightsBtn">✈️ <span id="btnFlights">Flights</span></button>
+                <button class="tab-button" id="hotelsBtn">🏨 <span id="btnHotels">Hotels</span></button>
+                <button class="tab-button" id="transportBtn">🚗 <span id="btnTransport">Transport</span></button>
+                <button class="tab-button" id="insuranceBtn">🛡️ <span id="btnInsurance">Insurance</span></button>
+                <button class="tab-button" id="ticketsBtn">🎫 <span id="btnTickets">Tickets</span></button>
+                <button class="tab-button" id="packagesBtn">📦 <span id="btnPackages">Packages</span></button>
             </div>
 
             <div class="chat-container" id="chatContainer">
@@ -550,51 +614,647 @@
         <div class="input-container">
             <textarea class="message-input" id="messageInput" placeholder="Tell me about your dream destination..." rows="1"></textarea>
             <button class="send-button" id="sendButton">
-                <span>Send</span>
+                <span id="sendButtonText">Send</span>
             </button>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÕES BÁSICAS
+        // ============= MÓDULO TPS CULTURAL TEMPLATES COMPLETO (12 IDIOMAS) =============
+        const TPSCulturalTemplates = {
+            templates: {
+                greeting: {
+                    pt: {
+                        icon: "🌟",
+                        opening: "Seu coração sussurrou um destino. Estou aqui para ouvi-lo.",
+                        continuation: "A alma viajante desperta quando sente o chamado. Para onde ela aponta hoje?"
+                    },
+                    en: {
+                        icon: "🗽",
+                        opening: "Your spirit is calling for adventure. I'm here to help you answer that call.",
+                        continuation: "Every great journey begins with a whisper from within. Where is yours leading you today?"
+                    },
+                    es: {
+                        icon: "🌅",
+                        opening: "Tu alma susurra un destino. Estoy aquí para escuchar sus secretos.",
+                        continuation: "Cada viaje nace de un deseo profundo. ¿Hacia dónde te llama tu corazón aventurero?"
+                    },
+                    fr: {
+                        icon: "✨",
+                        opening: "Votre âme murmure une destination. Je suis là pour écouter ses secrets.",
+                        continuation: "L'esprit voyageur s'éveille quand il ressent l'appel de l'ailleurs. Vers où vous porte-t-il aujourd'hui?"
+                    },
+                    de: {
+                        icon: "🌠",
+                        opening: "Ihr Herz flüstert ein Reiseziel. Ich bin hier, um zuzuhören.",
+                        continuation: "Die Wanderseele erwacht, wenn sie den Ruf spürt. Wohin zeigt sie heute?"
+                    },
+                    it: {
+                        icon: "🌸",
+                        opening: "Il tuo cuore sussurra una destinazione. Sono qui per ascoltarlo.",
+                        continuation: "L'anima viaggiatrice si risveglia quando sente il richiamo. Dove punta oggi?"
+                    },
+                    ja: {
+                        icon: "🌸",
+                        opening: "あなたの心が旅路を囁いています。静寂の中で、その声に耳を傾けましょう。",
+                        continuation: "魂が求める道があります。どちらへ向かいたいとお感じですか？"
+                    },
+                    ko: {
+                        icon: "🌙",
+                        opening: "마음속 깊은 곳에서 여행을 부르고 있습니다. 그 목소리를 함께 들어보겠습니다.",
+                        continuation: "영혼이 찾는 길이 있습니다. 오늘은 어디로 향하고 싶으신가요?"
+                    },
+                    zh: {
+                        icon: "🏮",
+                        opening: "你的心在轻声诉说着一个目的地。我在这里倾听它的秘密。",
+                        continuation: "旅行的灵魂在感受到召唤时苏醒。今天它指向哪里？"
+                    },
+                    ru: {
+                        icon: "❄️",
+                        opening: "Ваше сердце шепчет о месте назначения. Я здесь, чтобы услышать его.",
+                        continuation: "Душа путешественника пробуждается, когда чувствует зов. Куда она указывает сегодня?"
+                    },
+                    ar: {
+                        icon: "🌙",
+                        opening: "قلبك يهمس بوجهة. أنا هنا للاستماع إليه.",
+                        continuation: "الروح المسافرة تستيقظ عندما تشعر بالنداء. إلى أين تشير اليوم؟"
+                    },
+                    hi: {
+                        icon: "🕉️",
+                        opening: "आपका दिल एक गंतव्य की फुसफुसाहट कर रहा है। मैं इसे सुनने के लिए यहाँ हूँ।",
+                        continuation: "यात्री आत्मा जागती है जब वह पुकार महसूस करती है। आज यह कहाँ इशारा कर रही है?"
+                    }
+                },
+                
+                flightResults: {
+                    pt: {
+                        icon: "🌟",
+                        opening: "Eis os caminhos possíveis para sua jornada:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "Hospedagem sugerida:",
+                        closing: "A travessia está revelada. Qual caminho chama sua alma?"
+                    },
+                    en: {
+                        icon: "🗽",
+                        opening: "Here are the paths to your adventure:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏨",
+                        hotelLabel: "Recommended stay:",
+                        closing: "Your journey awaits. Which path speaks to your heart?"
+                    },
+                    es: {
+                        icon: "🌅",
+                        opening: "Aquí están los caminos hacia tu aventura:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏰",
+                        hotelLabel: "Hospedaje sugerido:",
+                        closing: "Tu viaje te espera. ¿Qué sendero habla a tu corazón?"
+                    },
+                    fr: {
+                        icon: "✨",
+                        opening: "Voici les chemins qui s'ouvrent vers votre destination:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "Hébergement suggéré:",
+                        closing: "Le destin vous propose ses routes. Laquelle résonne avec votre être?"
+                    },
+                    de: {
+                        icon: "🌠",
+                        opening: "Hier sind die Wege zu Ihrem Abenteuer:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏰",
+                        hotelLabel: "Empfohlene Unterkunft:",
+                        closing: "Ihre Reise wartet. Welcher Weg spricht zu Ihrem Herzen?"
+                    },
+                    it: {
+                        icon: "🌸",
+                        opening: "Ecco i percorsi verso la tua avventura:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "Soggiorno consigliato:",
+                        closing: "Il tuo viaggio ti aspetta. Quale sentiero parla al tuo cuore?"
+                    },
+                    ja: {
+                        icon: "🌸",
+                        opening: "ご旅路への道筋が見えました：",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏮",
+                        hotelLabel: "宿泊のご提案:",
+                        closing: "道は示されました。どちらがあなたの心に響きますか？"
+                    },
+                    ko: {
+                        icon: "🌙",
+                        opening: "여행길로 향하는 길들이 보입니다：",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏯",
+                        hotelLabel: "숙소 제안:",
+                        closing: "길이 열렸습니다. 어떤 길이 마음에 와 닿으시나요?"
+                    },
+                    zh: {
+                        icon: "🏮",
+                        opening: "这里是通往你冒险的道路：",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "推荐住宿：",
+                        closing: "你的旅程在等待。哪条路径与你的心灵对话？"
+                    },
+                    ru: {
+                        icon: "❄️",
+                        opening: "Вот пути к вашему приключению:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "Рекомендуемое размещение:",
+                        closing: "Ваше путешествие ждет. Какой путь говорит с вашим сердцем?"
+                    },
+                    ar: {
+                        icon: "🌙",
+                        opening: "هذه هي المسارات إلى مغامرتك:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "الإقامة المقترحة:",
+                        closing: "رحلتك في الانتظار. أي مسار يتحدث إلى قلبك؟"
+                    },
+                    hi: {
+                        icon: "🕉️",
+                        opening: "यहाँ आपके साहसिक कार्य के लिए रास्ते हैं:",
+                        flightPrefix: "✈️",
+                        hotelPrefix: "🏛️",
+                        hotelLabel: "अनुशंसित प्रवास:",
+                        closing: "आपकी यात्रा प्रतीक्षा कर रही है। कौन सा रास्ता आपके दिल से बात करता है?"
+                    }
+                },
+                
+                fallback: {
+                    pt: {
+                        icon: "🌫️",
+                        opening: "Ainda não enxergo claramente o seu destino.",
+                        explanation: "As névoas do tempo cobrem os caminhos, mas isso não significa que eles não existam. Poderia me contar com mais detalhes para onde sua alma deseja ir? Talvez uma data, uma cidade, ou mesmo apenas um sentimento?",
+                        suggestion: "✨ Enquanto isso, posso sugerir destinos que costumam chamar corações inquietos..."
+                    },
+                    en: {
+                        icon: "🌫️",
+                        opening: "I can't quite see your destination clearly yet.",
+                        explanation: "The mists of possibility are still settling, but that doesn't mean your path isn't there. Could you share more details about where your spirit wants to go? Maybe a date, a city, or even just a feeling you're chasing?",
+                        suggestion: "🗽 Meanwhile, I can suggest destinations that call to restless hearts..."
+                    },
+                    es: {
+                        icon: "🌫️",
+                        opening: "Aún no veo claramente tu destino.",
+                        explanation: "Las brumas del tiempo cubren los senderos, pero eso no significa que no existan. ¿Podrías contarme más detalles sobre adónde quiere ir tu alma? ¿Quizás una fecha, una ciudad, o incluso solo un sentimiento?",
+                        suggestion: "🌅 Mientras tanto, puedo sugerir destinos que suelen llamar a corazones inquietos..."
+                    },
+                    fr: {
+                        icon: "🌫️",
+                        opening: "Je ne distingue pas encore clairement votre destination.",
+                        explanation: "Les brumes du temps voilent les chemins, mais cela ne signifie pas qu'ils n'existent pas. Pourriez-vous me confier plus de détails sur l'endroit où votre âme souhaite aller? Peut-être une date, une ville, ou même simplement un sentiment?",
+                        suggestion: "✨ En attendant, je peux suggérer des destinations qui appellent les cœurs en quête..."
+                    },
+                    de: {
+                        icon: "🌫️",
+                        opening: "Ich kann Ihr Ziel noch nicht klar erkennen.",
+                        explanation: "Die Nebel der Zeit verhüllen die Wege, aber das bedeutet nicht, dass sie nicht existieren. Könnten Sie mir mehr Details darüber erzählen, wohin Ihre Seele gehen möchte? Vielleicht ein Datum, eine Stadt oder sogar nur ein Gefühl?",
+                        suggestion: "🌠 In der Zwischenzeit kann ich Reiseziele vorschlagen, die unruhige Herzen rufen..."
+                    },
+                    it: {
+                        icon: "🌫️",
+                        opening: "Non riesco ancora a vedere chiaramente la tua destinazione.",
+                        explanation: "Le nebbie del tempo coprono i sentieri, ma questo non significa che non esistano. Potresti raccontarmi più dettagli su dove vuole andare la tua anima? Forse una data, una città, o anche solo un sentimento?",
+                        suggestion: "🌸 Nel frattempo, posso suggerire destinazioni che di solito chiamano cuori inquieti..."
+                    },
+                    ja: {
+                        icon: "🌫️",
+                        opening: "まだあなたの目的地がはっきりと見えません。",
+                        explanation: "霧が道筋を覆っていますが、道が存在しないわけではありません。もう少し詳しく教えていただけませんか？日付、都市、あるいはお気持ちだけでも構いません。",
+                        suggestion: "🌸 その間、落ち着かない心を呼ぶ場所をご提案できます..."
+                    },
+                    ko: {
+                        icon: "🌫️",
+                        opening: "아직 목적지가 명확하게 보이지 않습니다.",
+                        explanation: "시간의 안개가 길을 가리고 있지만, 길이 없는 것은 아닙니다. 마음이 향하고자 하는 곳에 대해 좀 더 자세히 말씀해 주실 수 있나요? 날짜, 도시, 또는 단순한 감정이라도 괜찮습니다.",
+                        suggestion: "🌙 그동안 불안한 마음을 부르는 곳들을 제안해 드릴 수 있습니다..."
+                    },
+                    zh: {
+                        icon: "🌫️",
+                        opening: "我还不能清楚地看到你的目的地。",
+                        explanation: "时间的迷雾遮盖了道路，但这并不意味着它们不存在。你能告诉我更多关于你的灵魂想去哪里的细节吗？也许是一个日期、一座城市，甚至只是一种感觉？",
+                        suggestion: "🏮 与此同时，我可以建议一些通常呼唤不安心灵的目的地..."
+                    },
+                    ru: {
+                        icon: "🌫️",
+                        opening: "Я еще не могу ясно видеть ваше место назначения.",
+                        explanation: "Туманы времени скрывают пути, но это не означает, что их не существует. Не могли бы вы рассказать мне больше деталей о том, куда хочет отправиться ваша душа? Возможно, дату, город или даже просто чувство?",
+                        suggestion: "❄️ Тем временем я могу предложить места, которые обычно зовут беспокойные сердца..."
+                    },
+                    ar: {
+                        icon: "🌫️",
+                        opening: "لا أستطيع رؤية وجهتك بوضوح بعد.",
+                        explanation: "ضباب الزمن يغطي المسارات، لكن هذا لا يعني أنها غير موجودة. هل يمكنك أن تخبرني المزيد من التفاصيل حول المكان الذي تريد روحك الذهاب إليه؟ ربما تاريخ، مدينة، أو حتى مجرد شعور؟",
+                        suggestion: "🌙 في هذه الأثناء، يمكنني اقتراح وجهات تستدعي عادة القلوب القلقة..."
+                    },
+                    hi: {
+                        icon: "🌫️",
+                        opening: "मैं अभी भी आपके गंतव्य को स्पष्ट रूप से नहीं देख सकता।",
+                        explanation: "समय की धुंध रास्तों को ढक देती है, लेकिन इसका मतलब यह नहीं है कि वे मौजूद नहीं हैं। क्या आप मुझे इस बारे में और विवरण बता सकते हैं कि आपकी आत्मा कहाँ जाना चाहती है? शायद एक तारीख, एक शहर, या केवल एक भावना?",
+                        suggestion: "🕉️ इस बीच, मैं उन गंतव्यों का सुझाव दे सकता हूँ जो आमतौर पर बेचैन दिलों को बुलाते हैं..."
+                    }
+                }
+            },
+            
+            getTemplate(type, lang = 'en') {
+                const fallbackLang = this.templates[type][lang] ? lang : 'en';
+                return this.templates[type][fallbackLang] || {};
+            },
+            
+            renderGreeting(lang = 'en') {
+                const template = this.getTemplate('greeting', lang);
+                return `${template.icon} ${template.opening}\n\n${template.continuation}`;
+            },
+            
+            renderFallback(lang = 'en') {
+                const template = this.getTemplate('fallback', lang);
+                return `${template.icon} ${template.opening}\n\n${template.explanation}\n\n${template.suggestion}`;
+            }
+        };
+
+        // ============= SISTEMA MULTILÍNGUE COMPLETO (12 IDIOMAS) =============
         let currentLang = 'en';
         let isProcessing = false;
 
         const translations = {
             en: {
-                send: "Send",
+                languageTitle: "🌍 Language / Idioma",
+                sidebarTitle: "🧭 Destinations that Touch the Soul",
+                sidebarMessage: "🌱 Every journey through TPS plants hope and transforms lives. Grateful to be part of this chain of light.",
+                sidebarFooter: "Connecting hearts to the world",
+                btnFlights: "Flights",
+                btnHotels: "Hotels", 
+                btnTransport: "Transport",
+                btnInsurance: "Insurance",
+                btnTickets: "Tickets",
+                btnPackages: "Packages",
                 placeholder: "Tell me about your dream destination...",
+                send: "Send",
                 you: "You",
-                assistant: "TPS Assistant",
-                welcome: "🌟 Welcome to TPS - Your Personal Travel Secretary!\n\nI'm here to help you plan amazing trips with real AI assistance. How can I help you today?"
+                assistant: "TPS Assistant"
             },
             pt: {
-                send: "Enviar", 
+                languageTitle: "🌍 Idioma / Language",
+                sidebarTitle: "🧭 Destinos que Tocam a Alma",
+                sidebarMessage: "🌱 Cada jornada pelo TPS planta esperança e transforma vidas. Grato por fazer parte desta corrente de luz.",
+                sidebarFooter: "Conectando corações ao mundo",
+                btnFlights: "Voos",
+                btnHotels: "Hotéis",
+                btnTransport: "Transporte", 
+                btnInsurance: "Seguro",
+                btnTickets: "Ingressos",
+                btnPackages: "Pacotes",
                 placeholder: "Compartilhe seus sonhos de viagem...",
+                send: "Enviar",
                 you: "Você",
-                assistant: "TPS Assistant",
-                welcome: "🌟 Bem-vindo ao TPS - Sua Secretária Pessoal de Viagens!\n\nEstou aqui para ajudar você a planejar viagens incríveis com assistência real de IA. Como posso ajudar hoje?"
+                assistant: "TPS Assistant"
             },
             es: {
-                send: "Enviar",
+                languageTitle: "🌍 Idioma / Language",
+                sidebarTitle: "🧭 Destinos que Tocan el Alma",
+                sidebarMessage: "🌱 Cada viaje a través de TPS planta esperanza y transforma vidas. Agradecido de ser parte de esta cadena de luz.",
+                sidebarFooter: "Conectando corazones con el mundo",
+                btnFlights: "Vuelos",
+                btnHotels: "Hoteles",
+                btnTransport: "Transporte",
+                btnInsurance: "Seguro",
+                btnTickets: "Entradas",
+                btnPackages: "Paquetes",
                 placeholder: "Cuéntame sobre tu destino soñado...",
+                send: "Enviar",
                 you: "Tú",
-                assistant: "TPS Assistant",
-                welcome: "🌟 ¡Bienvenido a TPS - Tu Secretaria Personal de Viajes!\n\n¡Estoy aquí para ayudarte a planificar viajes increíbles con asistencia real de IA. ¿Cómo puedo ayudarte hoy?"
+                assistant: "TPS Assistant"
             },
             fr: {
-                send: "Envoyer",
+                languageTitle: "🌍 Langue / Language",
+                sidebarTitle: "🧭 Destinations qui Touchent l'Âme",
+                sidebarMessage: "🌱 Chaque voyage avec TPS plante l'espoir et transforme les vies. Reconnaissant de faire partie de cette chaîne de lumière.",
+                sidebarFooter: "Connecter les cœurs au monde",
+                btnFlights: "Vols",
+                btnHotels: "Hôtels",
+                btnTransport: "Transport",
+                btnInsurance: "Assurance",
+                btnTickets: "Billets",
+                btnPackages: "Forfaits",
                 placeholder: "Parlez-moi de votre destination de rêve...",
+                send: "Envoyer",
                 you: "Vous",
-                assistant: "TPS Assistant",
-                welcome: "🌟 Bienvenue chez TPS - Votre Secrétaire Personnel de Voyage!\n\nJe suis là pour vous aider à planifier des voyages incroyables avec une assistance IA réelle. Comment puis-je vous aider aujourd'hui?"
+                assistant: "TPS Assistant"
+            },
+            de: {
+                languageTitle: "🌍 Sprache / Language",
+                sidebarTitle: "🧭 Reiseziele die die Seele Berühren",
+                sidebarMessage: "🌱 Jede Reise mit TPS pflanzt Hoffnung und verwandelt Leben. Dankbar, Teil dieser Lichtkette zu sein.",
+                sidebarFooter: "Herzen mit der Welt verbinden",
+                btnFlights: "Flüge",
+                btnHotels: "Hotels",
+                btnTransport: "Transport",
+                btnInsurance: "Versicherung",
+                btnTickets: "Tickets",
+                btnPackages: "Pakete",
+                placeholder: "Erzählen Sie mir von Ihrem Traumziel...",
+                send: "Senden",
+                you: "Sie",
+                assistant: "TPS Assistant"
+            },
+            it: {
+                languageTitle: "🌍 Lingua / Language",
+                sidebarTitle: "🧭 Destinazioni che Toccano l'Anima",
+                sidebarMessage: "🌱 Ogni viaggio con TPS pianta speranza e trasforma vite. Grato di far parte di questa catena di luce.",
+                sidebarFooter: "Collegare cuori al mondo",
+                btnFlights: "Voli",
+                btnHotels: "Hotel",
+                btnTransport: "Trasporto",
+                btnInsurance: "Assicurazione",
+                btnTickets: "Biglietti",
+                btnPackages: "Pacchetti",
+                placeholder: "Parlami della tua destinazione dei sogni...",
+                send: "Invia",
+                you: "Tu",
+                assistant: "TPS Assistant"
+            },
+            ja: {
+                languageTitle: "🌍 言語 / Language",
+                sidebarTitle: "🧭 心に触れる目的地",
+                sidebarMessage: "🌱 TPSでの旅はすべて希望を植え、人生を変えます。この光の連鎖の一部であることに感謝しています。",
+                sidebarFooter: "心を世界につなぐ",
+                btnFlights: "航空券",
+                btnHotels: "ホテル",
+                btnTransport: "交通",
+                btnInsurance: "保険",
+                btnTickets: "チケット",
+                btnPackages: "パッケージ",
+                placeholder: "夢の目的地について教えてください...",
+                send: "送信",
+                you: "あなた",
+                assistant: "TPS アシスタント"
+            },
+            ko: {
+                languageTitle: "🌍 언어 / Language",
+                sidebarTitle: "🧭 영혼에 닿는 여행지",
+                sidebarMessage: "🌱 TPS를 통한 모든 여행은 희망을 심고 삶을 변화시킵니다. 이 빛의 사슬의 일부가 되어 감사합니다.",
+                sidebarFooter: "마음을 세상과 연결하기",
+                btnFlights: "항공편",
+                btnHotels: "호텔",
+                btnTransport: "교통",
+                btnInsurance: "보험",
+                btnTickets: "티켓",
+                btnPackages: "패키지",
+                placeholder: "꿈의 목적지에 대해 말해주세요...",
+                send: "전송",
+                you: "당신",
+                assistant: "TPS 어시스턴트"
+            },
+            zh: {
+                languageTitle: "🌍 语言 / Language",
+                sidebarTitle: "🧭 触动心灵的目的地",
+                sidebarMessage: "🌱 通过TPS的每一次旅行都播下希望并改变生活。感谢成为这光明之链的一部分。",
+                sidebarFooter: "连接心灵与世界",
+                btnFlights: "航班",
+                btnHotels: "酒店",
+                btnTransport: "交通",
+                btnInsurance: "保险",
+                btnTickets: "门票",
+                btnPackages: "套餐",
+                placeholder: "告诉我你梦想的目的地...",
+                send: "发送",
+                you: "您",
+                assistant: "TPS 助手"
+            },
+            ru: {
+                languageTitle: "🌍 Язык / Language",
+                sidebarTitle: "🧭 Места, Трогающие Душу",
+                sidebarMessage: "🌱 Каждое путешествие через TPS сеет надежду и меняет жизни. Благодарен быть частью этой цепи света.",
+                sidebarFooter: "Соединяя сердца с миром",
+                btnFlights: "Авиабилеты",
+                btnHotels: "Отели",
+                btnTransport: "Транспорт",
+                btnInsurance: "Страхование",
+                btnTickets: "Билеты",
+                btnPackages: "Пакеты",
+                placeholder: "Расскажите о месте вашей мечты...",
+                send: "Отправить",
+                you: "Вы",
+                assistant: "TPS Ассистент"
+            },
+            ar: {
+                languageTitle: "🌍 اللغة / Language",
+                sidebarTitle: "🧭 وجهات تلامس الروح",
+                sidebarMessage: "🌱 كل رحلة عبر TPS تزرع الأمل وتغير الحياة. ممتن لكوني جزءًا من سلسلة النور هذه.",
+                sidebarFooter: "ربط القلوب بالعالم",
+                btnFlights: "طيران",
+                btnHotels: "فنادق",
+                btnTransport: "نقل",
+                btnInsurance: "تأمين",
+                btnTickets: "تذاكر",
+                btnPackages: "حزم",
+                placeholder: "أخبرني عن وجهة أحلامك...",
+                send: "إرسال",
+                you: "أنت",
+                assistant: "مساعد TPS"
+            },
+            hi: {
+                languageTitle: "🌍 भाषा / Language",
+                sidebarTitle: "🧭 आत्मा को छूने वाले गंतव्य",
+                sidebarMessage: "🌱 TPS के माध्यम से हर यात्रा आशा बोती है और जीवन को बदलती है। इस प्रकाश श्रृंखला का हिस्सा होने के लिए आभारी।",
+                sidebarFooter: "दिलों को दुनिया से जोड़ना",
+                btnFlights: "उड़ानें",
+                btnHotels: "होटल",
+                btnTransport: "परिवहन",
+                btnInsurance: "बीमा",
+                btnTickets: "टिकट",
+                btnPackages: "पैकेज",
+                placeholder: "अपने सपनों के गंतव्य के बारे में बताएं...",
+                send: "भेजें",
+                you: "आप",
+                assistant: "TPS असिस्टेंट"
             }
         };
 
-        // FUNÇÕES DE INTERFACE
+        // ============= SISTEMA DE AFILIADOS CORRIGIDO E COMPLETO =============
+        const afiliadosReais = {
+            voos: [
+                {
+                    nome: "WayAway",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=5976&u=https%3A%2F%2Fwayaway.io&campaign_id=200",
+                    prioridade: 1
+                },
+                {
+                    nome: "Trip.com",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=8626&u=https%3A%2F%2Ftrip.com&campaign_id=121",
+                    prioridade: 2
+                },
+                {
+                    nome: "Aviasales",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=4114&u=https%3A%2F%2Faviasales.com&campaign_id=100",
+                    prioridade: 3
+                }
+            ],
+            hoteis: [
+                {
+                    nome: "Trip.com Hotels",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=8626&u=https%3A%2F%2Ftrip.com%2Fhotels&campaign_id=121",
+                    prioridade: 1
+                },
+                {
+                    nome: "Booking.com",
+                    url: "https://www.awin1.com/cread.php?awinmid=18119&awinaffid=1949091&ued=https%3A%2F%2Fwww.booking.com%2Findex.html",
+                    prioridade: 2
+                }
+            ],
+            transporte: [
+                {
+                    nome: "Localrent",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=2043&u=https%3A%2F%2Flocalrent.com%2Fen&campaign_id=87",
+                    prioridade: 1
+                },
+                {
+                    nome: "Kiwitaxi", 
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=647&u=https%3A%2F%2Fkiwitaxi.com&campaign_id=1",
+                    prioridade: 2
+                }
+            ],
+            insurance: [
+                {
+                    nome: "EKTA Travel",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=5869&u=https%3A%2F%2Fektatraveling.com&campaign_id=225",
+                    prioridade: 1
+                },
+                {
+                    nome: "Compare Insurance",
+                    url: "https://www.awin1.com/cread.php?awinmid=80595&awinaffid=1949091&ued=https%3A%2F%2Fquote.compareyourtravelinsurance.co.uk%2F",
+                    prioridade: 2
+                }
+            ],
+            tickets: [
+                {
+                    nome: "Tiqets",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=2074&u=https%3A%2F%2Ftiqets.com&campaign_id=89",
+                    prioridade: 1
+                },
+                {
+                    nome: "WeGoTrip",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=4487&u=https%3A%2F%2Fwegotrip.com&campaign_id=150",
+                    prioridade: 2
+                }
+            ],
+            packages: [
+                {
+                    nome: "Kiwi.com",
+                    url: "https://tp.media/click?shmarker=639764&promo_id=3413&source_type=link&type=click&campaign_id=111&trs=425649",
+                    prioridade: 1
+                },
+                {
+                    nome: "WayAway Plus",
+                    url: "https://tp.media/r?marker=639764&trs=425649&p=5976&u=https%3A%2F%2Fwayaway.io%2Fplus&campaign_id=200",
+                    prioridade: 2
+                }
+            ]
+        };
+
+        // ============= FUNÇÕES PRINCIPAIS =============
+        
+        function detectLanguageFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang');
+            
+            console.log('🔍 URL atual:', window.location.href);
+            console.log('🌍 Parâmetro lang detectado:', langParam);
+            
+            if (langParam && translations[langParam]) {
+                console.log('✅ Idioma VÁLIDO da URL:', langParam);
+                return langParam;
+            }
+            
+            const savedLang = localStorage.getItem('tps_language');
+            if (savedLang && translations[savedLang]) {
+                console.log('💾 Idioma do localStorage:', savedLang);
+                return savedLang;
+            }
+            
+            const browserLang = navigator.language.substring(0, 2);
+            if (translations[browserLang]) {
+                console.log('🌐 Idioma do navegador:', browserLang);
+                return browserLang;
+            }
+            
+            console.log('🔄 Usando idioma padrão: en');
+            return 'en';
+        }
+
+        function applyTranslations(lang) {
+            console.log('🔄 Aplicando traduções para idioma:', lang);
+            
+            const texts = translations[lang];
+            if (!texts) {
+                console.error('❌ Traduções não encontradas para:', lang);
+                return;
+            }
+            
+            const elementMappings = {
+                'languageTitle': texts.languageTitle,
+                'sidebarTitle': texts.sidebarTitle,
+                'sidebarMessage': texts.sidebarMessage,
+                'sidebarFooter': texts.sidebarFooter,
+                'btnFlights': texts.btnFlights,
+                'btnHotels': texts.btnHotels,
+                'btnTransport': texts.btnTransport,
+                'btnInsurance': texts.btnInsurance,
+                'btnTickets': texts.btnTickets,
+                'btnPackages': texts.btnPackages,
+                'sendButtonText': texts.send
+            };
+            
+            Object.entries(elementMappings).forEach(([elementId, translation]) => {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    element.textContent = translation;
+                    console.log(`✅ ${elementId}: ${translation}`);
+                }
+            });
+            
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.placeholder = texts.placeholder;
+                console.log('✅ Placeholder atualizado:', texts.placeholder);
+            }
+            
+            const languageSelect = document.getElementById('languageSelect');
+            if (languageSelect) {
+                languageSelect.value = lang;
+                console.log('✅ Seletor sincronizado com:', lang);
+            }
+            
+            localStorage.setItem('tps_language', lang);
+            console.log('💾 Idioma salvo no localStorage:', lang);
+        }
+
+        function changeLanguage(newLang) {
+            console.log('🔄 Mudando idioma para:', newLang);
+            
+            currentLang = newLang;
+            applyTranslations(newLang);
+            
+            const url = new URL(window.location);
+            url.searchParams.set('lang', newLang);
+            window.history.replaceState({}, '', url);
+            
+            console.log('🆕 URL atualizada:', url.toString());
+        }
+
         function addMessage(text, isUser = false) {
             const chatContainer = document.getElementById('chatContainer');
             if (!chatContainer) return;
+            
+            // Processar links de afiliados se for resposta da IA
+            if (!isUser) {
+                text = addAffiliateLinksToText(text);
+            }
             
             const messageDiv = document.createElement('div');
             messageDiv.className = 'conversation-line ' + (isUser ? 'user' : 'assistant');
@@ -622,9 +1282,108 @@
             
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            // Anexar listeners aos novos links de afiliados
+            if (!isUser) {
+                setTimeout(() => {
+                    attachAffiliateListeners();
+                }, 100);
+            }
         }
 
-        // FUNÇÃO PRINCIPAL - CORRIGIDA COM URL DO RAILWAY
+        function addAffiliateLinksToText(text) {
+            if (!text) return text;
+
+            // Detectar preços e torná-los clicáveis
+            let processedText = text.replace(
+                /(\$\s?\d+[,.]?\d*|\€\s?\d+[,.]?\d*|R\$\s?\d+[,.]?\d*|USD\s*\d+[,.]?\d*|EUR\s*\d+[,.]?\d*)/gi,
+                (match) => {
+                    const affiliate = afiliadosReais.voos[0];
+                    const priceNumber = match.replace(/[^\d.,]/g, '').replace(/[^\d]/g, '');
+            
+                    // Gerar um ID único para cada link
+                    const linkId = 'affiliate-' + Math.random().toString(36).substr(2, 9);
+            
+                    // Retornar HTML limpo sem onclick inline
+                    return `<a href="${affiliate.url}" target="_blank" 
+                               id="${linkId}"
+                               data-destination="Voo" 
+                               data-price="${priceNumber}" 
+                               data-currency="USD"
+                               class="affiliate-link"
+                               style="color: white; text-decoration: none; font-weight: bold; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 4px 8px; border-radius: 8px; margin: 0 2px; display: inline-block; cursor: pointer;">
+                               ${match} ✈️
+                            </a>`;
+                }
+            );
+
+            return processedText;
+        }
+
+        // Função para anexar listeners aos links de afiliados
+        function attachAffiliateListeners() {
+            // Encontrar todos os links de afiliados criados
+            const affiliateLinks = document.querySelectorAll('a.affiliate-link:not([data-listener-attached])');
+    
+            affiliateLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const destination = this.getAttribute('data-destination');
+                    const price = this.getAttribute('data-price');
+                    const currency = this.getAttribute('data-currency');
+            
+                    // Chamar tracking
+                    TPSTracking.trackAffiliateClick(destination, price, currency, this);
+                });
+        
+                // Marcar como processado
+                link.setAttribute('data-listener-attached', 'true');
+            });
+        }
+        
+        function sendDestinationMessage(destination) {
+            // Usar template cultural baseado no idioma atual
+            const greeting = TPSCulturalTemplates.renderGreeting(currentLang);
+            const message = `${greeting}\n\n✈️ Destino escolhido: ${destination}`;
+            addMessage(message);
+            
+            // Simular processamento
+            setTimeout(() => {
+                const response = generateDestinationResponse(destination, currentLang);
+                addMessage(response);
+            }, 1500);
+        }
+
+        function generateDestinationResponse(destination, lang) {
+            const template = TPSCulturalTemplates.getTemplate('flightResults', lang);
+            
+            // Simular dados de voo
+            const mockFlights = [
+                {
+                    airline: 'LATAM',
+                    route: `GRU → ${destination}`,
+                    time: '22:10 → 12:00',
+                    class: 'Executiva',
+                    price: 'USD 1.430'
+                },
+                {
+                    airline: 'Air France',
+                    route: `GRU → ${destination}`,
+                    time: '16:20 → 09:15',
+                    class: 'Econômica',
+                    price: 'USD 980'
+                }
+            ];
+            
+            let response = `${template.icon} ${template.opening}\n\n`;
+            
+            mockFlights.forEach(flight => {
+                response += `${template.flightPrefix} ${flight.airline} | ${flight.route} | ${flight.time} | ${flight.class} | ${flight.price}\n`;
+            });
+            
+            response += `\n${template.hotelPrefix} ${template.hotelLabel} Hotel Alma ${destination} – USD 180/noite\n\n${template.closing}`;
+            
+            return response;
+        }
+
         async function sendMessage() {
             if (isProcessing) return;
             
@@ -633,22 +1392,42 @@
             
             if (!messageInput || !sendButton) return;
             
-            const message = messageInput.value.trim();
-            if (!message) return;
+            const userMessage = messageInput.value.trim();
+            if (!userMessage) return;
 
-            // Bloquear interface
             isProcessing = true;
             sendButton.disabled = true;
             sendButton.innerHTML = '<span>...</span>';
 
-            // Mostrar mensagem do usuário
-            addMessage(message, true);
+            addMessage(userMessage, true);
             messageInput.value = '';
 
             try {
-                console.log('🚀 Calling Railway API:', message);
+                console.log('🚀 Enviando para API GPT real...', {
+                    message: userMessage,
+                    language: currentLang
+                });
                 
-                // ✅ URL CORRIGIDA DO RAILWAY
+                // Criar contexto com instruções específicas para o idioma
+                const languageNames = {
+                    'en': 'English',
+                    'pt': 'Portuguese (Brazilian)',
+                    'es': 'Spanish', 
+                    'fr': 'French',
+                    'de': 'German',
+                    'it': 'Italian',
+                    'ja': 'Japanese',
+                    'ko': 'Korean',
+                    'zh': 'Chinese (Simplified)',
+                    'ru': 'Russian',
+                    'ar': 'Arabic',
+                    'hi': 'Hindi'
+                };
+                
+                const contextualMessage = `Mensagem do usuário: "${userMessage}"
+
+                Você é TPS, um oráculo místico de viagens. Responda APENAS em português com linguagem poética e inclua preços específicos como USD 1,250.`;
+                
                 const response = await fetch("https://tps-railway-api-production.up.railway.app/gpt-tps", {
                     method: "POST",
                     headers: {
@@ -656,26 +1435,37 @@
                         "x-api-key": "canal-vivo-tps-2025"
                     },
                     body: JSON.stringify({
-                        message: message,
+                        message: contextualMessage,
                         language: currentLang,
+                        cultural_template: true,
                         timestamp: Date.now()
                     })
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('✅ API Response:', data);
+                    console.log('✅ Resposta da API:', data);
                     
-                    // ✅ CORRIGIDO: Extrair resposta real da IA
-                    const gptResponse = data.content || data.reply?.message || data.message || "⚠️ Conexão temporariamente indisponível";
+                    // Extrair resposta real do GPT
+                    let gptResponse = data.content || data.reply?.message || data.message;
+                    
+                    if (!gptResponse || typeof gptResponse !== 'string') {
+                        throw new Error('Resposta inválida da API');
+                    }
+                    
+                    // Verificar se a resposta está no idioma correto
+                    console.log('📝 Resposta do GPT:', gptResponse.substring(0, 100) + '...');
+                    
                     addMessage(gptResponse);
                 } else {
                     throw new Error(`API Error: ${response.status} ${response.statusText}`);
                 }
 
             } catch (error) {
-                console.error('❌ API Error:', error);
-                addMessage(`❌ **Connection Error**\n\nCouldn't reach the TPS API. Please check:\n• Railway deployment status\n• API endpoint availability\n• Network connection\n\nError: ${error.message}`);
+                console.error('❌ Erro na API:', error);
+                // Usar fallback cultural em vez de mensagem genérica
+                const fallbackResponse = TPSCulturalTemplates.renderFallback(currentLang);
+                addMessage(fallbackResponse);
             } finally {
                 // Reativar interface
                 isProcessing = false;
@@ -685,52 +1475,170 @@
             }
         }
 
-        function updateLanguage(lang) {
-            currentLang = lang;
-            const texts = translations[lang] || translations['en'];
+        function setupAffiliateButtons() {
+            const buttonMappings = {
+                'flightsBtn': () => {
+                    window.open(afiliadosReais.voos[0].url, '_blank');
+                    trackAffiliateClick('voos', afiliadosReais.voos[0].nome);
+                },
+                'hotelsBtn': () => {
+                    window.open(afiliadosReais.hoteis[0].url, '_blank');
+                    trackAffiliateClick('hoteis', afiliadosReais.hoteis[0].nome);
+                },
+                'transportBtn': () => {
+                    window.open(afiliadosReais.transporte[0].url, '_blank');
+                    trackAffiliateClick('transporte', afiliadosReais.transporte[0].nome);
+                },
+                'insuranceBtn': () => {
+                    window.open(afiliadosReais.insurance[0].url, '_blank');
+                    trackAffiliateClick('insurance', afiliadosReais.insurance[0].nome);
+                },
+                'ticketsBtn': () => {
+                    window.open(afiliadosReais.tickets[0].url, '_blank');
+                    trackAffiliateClick('tickets', afiliadosReais.tickets[0].nome);
+                },
+                'packagesBtn': () => {
+                    window.open(afiliadosReais.packages[0].url, '_blank');
+                    trackAffiliateClick('packages', afiliadosReais.packages[0].nome);
+                }
+            };
             
-            const messageInput = document.getElementById('messageInput');
-            const sendButton = document.getElementById('sendButton');
+            Object.entries(buttonMappings).forEach(([buttonId, action]) => {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    button.addEventListener('click', action);
+                }
+            });
             
-            if (messageInput) {
-                messageInput.placeholder = texts.placeholder;
-            }
-            
-            if (sendButton && !isProcessing) {
-                sendButton.innerHTML = '<span>' + texts.send + '</span>';
-            }
+            console.log('✅ Todos os botões de afiliados configurados');
         }
 
-        // INICIALIZAÇÃO
+        function trackAffiliateClick(category, partner) {
+            const clickData = {
+                category,
+                partner,
+                timestamp: Date.now(),
+                language: currentLang,
+                url: window.location.href
+            };
+            
+            // Salvar no localStorage
+            const clicks = JSON.parse(localStorage.getItem('tps_affiliate_clicks') || '[]');
+            clicks.push(clickData);
+            localStorage.setItem('tps_affiliate_clicks', JSON.stringify(clicks.slice(-50)));
+            
+            console.log('📊 Clique de afiliado registrado:', clickData);
+            
+            // Mostrar feedback ao usuário
+            const texts = translations[currentLang] || translations['en'];
+            const partnerName = partner || category;
+            addMessage(`🔗 Redirecionando para ${partnerName}...`);
+        }
+
+        // ============= INICIALIZAÇÃO COMPLETA =============
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌍 TPS inicializando com sistema cultural completo (12 idiomas)...');
+            
+            // 1. Detectar e aplicar idioma
+            currentLang = detectLanguageFromURL();
+            console.log('🎯 Idioma detectado:', currentLang);
+            applyTranslations(currentLang);
+            
+            // 2. Configurar event listeners
             const messageInput = document.getElementById('messageInput');
             const sendButton = document.getElementById('sendButton');
             const languageSelect = document.getElementById('languageSelect');
             
-            if (!messageInput || !sendButton) return;
-
-            // Event listeners
-            sendButton.addEventListener('click', sendMessage);
+            if (sendButton) {
+                sendButton.addEventListener('click', sendMessage);
+            }
             
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-
-            if (languageSelect) {
-                languageSelect.addEventListener('change', function(e) {
-                    updateLanguage(e.target.value);
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
                 });
             }
 
-            // Mensagem de boas-vindas
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function(e) {
+                    changeLanguage(e.target.value);
+                });
+            }
+
+            // 3. Configurar sistema de afiliados COMPLETO
+            setupAffiliateButtons();
+
+            // 4. Mensagem de boas-vindas cultural
             setTimeout(() => {
-                const texts = translations[currentLang] || translations['en'];
-                addMessage(texts.welcome);
-            }, 500);
+                const greeting = TPSCulturalTemplates.renderGreeting(currentLang);
+                addMessage(greeting);
+                console.log('💬 Saudação cultural em:', currentLang);
+            }, 1000);
+            
+            console.log(`✅ TPS inicializado completamente`);
+            console.log(`🌍 Idioma: ${currentLang} | Sistema Cultural: 12 idiomas ativos`);
+            console.log(`🔗 Afiliados: ${Object.keys(afiliadosReais).length} categorias configuradas`);
+        });
+
+        // Tornar função disponível globalmente
+        window.sendDestinationMessage = sendDestinationMessage;
+
+        // Debug e estatísticas
+        console.log('📊 TPS Cultural System Completo:', {
+            idiomas_suportados: Object.keys(translations).length,
+            templates_culturais: Object.keys(TPSCulturalTemplates.templates).length,
+            afiliados_categorias: Object.keys(afiliadosReais).length,
+            total_links_afiliados: Object.values(afiliadosReais).reduce((acc, arr) => acc + arr.length, 0)
         });
     </script>
+
+<script>
+// Sistema de Tracking TPS-GPT
+window.TPSTracking = {
+    trackAffiliateClick: function(destination, price, currency, element) {
+        const clickData = {
+            destination: destination,
+            price: price,
+            currency: currency,
+            timestamp: new Date().toISOString(),
+            language: currentLang,
+            url: element ? element.href : 'unknown'
+        };
+        
+        // Google Analytics
+        gtag('event', 'affiliate_click', {
+            'event_category': 'TPS-GPT',
+            'event_label': destination,
+            'destination': destination,
+            'price': price,
+            'currency': currency,
+            'value': parseFloat(price) || 0
+        });
+        
+        // Webhook Make.com
+        fetch('https://hook.us2.make.com/z54vh1xkyb9a3yj1wyjaew6dyrwb53wa', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(clickData)
+        }).catch(e => console.log('📡 Webhook enviado'));
+        
+        console.log('🎯 Clique rastreado:', clickData);
+        
+        // Feedback visual
+        if (element) {
+            const original = element.innerHTML;
+            element.innerHTML = '✈️ Redirecionando...';
+            setTimeout(() => element.innerHTML = original, 1500);
+        }
+        
+        return true;
+    }
+};
+</script>
+<script src="tps-invisible-affiliates.js"></script>
 </body>
 </html>
+                        

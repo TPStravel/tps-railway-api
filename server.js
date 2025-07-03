@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import NodeCache from 'node-cache';
 import compression from 'compression';
 import nodemailer from 'nodemailer';
+import Amadeus from 'amadeus';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -18,6 +19,13 @@ const PORT = process.env.PORT || 8080;
 const cache = new NodeCache({ stdTTL: 600 });
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
+// Configurar Amadeus
+const amadeus = new Amadeus({
+  clientId: process.env.AMADEUS_API_KEY,
+  clientSecret: process.env.AMADEUS_API_SECRET,
+  hostname: 'test'
+});
+
 // Email transporter
 const createEmailTransporter = () => {
   return nodemailer.createTransporter({
@@ -28,6 +36,84 @@ const createEmailTransporter = () => {
     }
   });
 };
+
+// Endpoint para buscar voos
+app.post('/search-flights', async (req, res) => {
+  try {
+    const { origin, destination, departureDate, adults = 1 } = req.body;
+    
+    console.log('🔍 Buscando voos:', { origin, destination, departureDate });
+    
+    const response = await amadeus.shopping.flightOffersSearch.get({
+      originLocationCode: origin,
+      destinationLocationCode: destination,
+      departureDate: departureDate,
+      adults: adults,
+      max: 10
+    });
+
+    const flights = response.data || [];
+    
+    const processedFlights = flights.map(flight => {
+      const segment = flight.itineraries[0].segments[0];
+      const price = parseFloat(flight.price.total);
+      
+      return {
+        id: flight.id,
+        airline: segment.carrierCode,
+        departure: {
+          airport: segment.departure.iataCode,
+          time: segment.departure.at
+        },
+        arrival: {
+          airport: segment.arrival.iataCode,
+          time: segment.arrival.at
+        },
+        price: {
+          total: price,
+          currency: flight.price.currency
+        },
+        stops: flight.itineraries[0].segments.length - 1
+      };
+    });
+
+    res.json({
+      success: true,
+      flights: processedFlights.sort((a, b) => a.price.total - b.price.total)
+    });
+
+  } catch (error) {
+    console.error('❌ Erro:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erro ao buscar voos'
+    });
+  }
+});
+
+// Endpoint de teste
+app.get('/test-amadeus', async (req, res) => {
+  try {
+    const response = await amadeus.shopping.flightOffersSearch.get({
+      originLocationCode: 'GRU',
+      destinationLocationCode: 'GIG',
+      departureDate: '2025-08-15',
+      adults: 1,
+      max: 5
+    });
+
+    res.json({
+      success: true,
+      message: 'Amadeus funcionando!',
+      flights: response.data.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
 
 // Test email on startup
 const testEmailConfiguration = async () => {
