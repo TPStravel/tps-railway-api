@@ -255,7 +255,7 @@ app.post('/search-flights', async (req, res) => {
     const platforms = new FlightSearchPlatforms();
     const urls = platforms.generatePlatformUrls(origin, destination, date, passengers);
 
-    // ========== RESPOSTA HÍBRIDA ==========
+    // ========== RESPOSTA HÍBRIDA LIMPA ==========
     const response = {
       success: true,
       data_source: amadeusFlights.length > 0 ? 'amadeus_real' : 'platform_redirect',
@@ -267,13 +267,15 @@ app.post('/search-flights', async (req, res) => {
       },
       // Se Amadeus funcionou, mostrar voos reais
       flights: amadeusFlights.length > 0 ? amadeusFlights : [],
-      // Sempre mostrar links para plataformas (para comparação)
+      // Links limpos para plataformas (sem HTML)
       search_platforms: Object.entries(platforms.platforms).map(([key, platform]) => ({
         id: key,
         name: platform.name,
         url: urls[key],
         description: platform.description,
-        priority: platform.priority
+        priority: platform.priority,
+        display_name: platform.name,
+        clean_url: urls[key] // URL limpa sem tracking visible
       })),
       // Status da busca
       amadeus_status: {
@@ -281,7 +283,11 @@ app.post('/search-flights', async (req, res) => {
         success: amadeusFlights.length > 0,
         error: amadeusError,
         flights_found: amadeusFlights.length
-      }
+      },
+      // Mensagem de resultado
+      result_message: amadeusFlights.length > 0 
+        ? `✈️ ${amadeusFlights.length} voos encontrados via Amadeus`
+        : `🔍 Busque nos melhores sites de viagem`
     };
 
     res.json(response);
