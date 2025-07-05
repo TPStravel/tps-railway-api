@@ -336,6 +336,14 @@ app.post('/api/track-click', async (req, res) => {
     }
 });
 
+app.get('/api/analytics', (req, res) => {
+    res.json({
+        clicks_hoje: 12,
+        links_mais_clicados: ['Iberia', 'Trip.com', 'Booking'],
+        conversao_estimada: '5.2%'
+    });
+});
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'tps-gpt.html'));
 });
