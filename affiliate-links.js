@@ -68,7 +68,15 @@ const parceirosAfiliados = {
     },
     prioridade: 7
   },
-
+  
+  vooIberia: {
+    nome: "Iberia",
+    categoria: "voos", 
+    descricao: "Iberia Brasil - voos para Europa",
+    url_base: "https://www.anrdoezrs.net/click-101462880-12120173",
+    parametros: {},
+    prioridade: 8
+  },
   // 🏨 HOSPEDAGEM
   hotelBooking: {
     nome: "Booking.com",

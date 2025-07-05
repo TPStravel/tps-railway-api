@@ -1,0 +1,1006 @@
+
+<!DOCTYPE html>
+<html lang="en-US" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS - Secure Authentication System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async="" defer=""></script>
+    <style>
+      :root {
+        --primary-color: #1e3a8a;
+        --secondary-color: #3b82f6;
+        --accent-color: #10b981;
+        --danger-color: #ef4444;
+        --text-color: #1f2937;
+        --border-color: #d1d5db;
+        --bg-light: #f8fafc;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        min-height: 600px;
+      }
+
+      .info-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .info-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .logo {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .feature-list {
+        list-style: none;
+        margin-bottom: 2rem;
+      }
+
+      .feature-list li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .feature-list li::before {
+        content: '✓';
+        background: var(--accent-color);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .auth-section {
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .auth-header h1 {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .auth-header p {
+        color: #6b7280;
+        font-size: 1rem;
+      }
+
+      .auth-tabs {
+        display: flex;
+        margin-bottom: 2rem;
+        background: var(--bg-light);
+        border-radius: 10px;
+        padding: 4px;
+      }
+
+      .auth-tab {
+        flex: 1;
+        padding: 12px 24px;
+        background: none;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .auth-tab.active {
+        background: white;
+        color: var(--primary-color);
+        box-shadow: var(--shadow);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .form-group input.error {
+        border-color: var(--danger-color);
+      }
+
+      .form-group input.success {
+        border-color: var(--accent-color);
+      }
+
+      .error-message {
+        color: var(--danger-color);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      .success-message {
+        color: var(--accent-color);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: none;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 14px 24px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-google {
+        width: 100%;
+        padding: 14px 24px;
+        background: white;
+        color: var(--text-color);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+      }
+
+      .btn-google:hover {
+        background: var(--bg-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .divider {
+        position: relative;
+        margin: 2rem 0;
+        text-align: center;
+      }
+
+      .divider::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border-color);
+      }
+
+      .divider span {
+        background: white;
+        padding: 0 1rem;
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .forgot-password {
+        text-align: center;
+        margin-top: 1rem;
+      }
+
+      .forgot-password a {
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .forgot-password a:hover {
+        text-decoration: underline;
+      }
+
+      .auth-form {
+        display: none;
+      }
+
+      .auth-form.active {
+        display: block;
+      }
+
+      .loading {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .loading.show {
+        display: block;
+      }
+
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .security-info {
+        background: var(--bg-light);
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-top: 2rem;
+      }
+
+      .security-info h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .security-info ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .security-info li {
+        padding: 0.5rem 0;
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+
+      .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+      }
+
+      .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+      }
+
+      .alert-warning {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fed7aa;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr;
+          margin: 10px;
+        }
+
+        .info-section {
+          padding: 40px 30px;
+          text-align: center;
+        }
+
+        .auth-section {
+          padding: 40px 30px;
+        }
+
+        .logo {
+          font-size: 2.5rem;
+        }
+
+        .subtitle {
+          font-size: 1.2rem;
+        }
+      }
+    </style>
+  <style id="googleidentityservice_button_styles">.qJTHM{-webkit-user-select:none;color:#202124;direction:ltr;-webkit-touch-callout:none;font-family:"Roboto-Regular",arial,sans-serif;-webkit-font-smoothing:antialiased;font-weight:400;margin:0;overflow:hidden;-webkit-text-size-adjust:100%}.ynRLnc{left:-9999px;position:absolute;top:-9999px}.L6cTce{display:none}.bltWBb{word-break:break-all}.hSRGPd{color:#1a73e8;cursor:pointer;font-weight:500;text-decoration:none}.Bz112c-W3lGp{height:16px;width:16px}.Bz112c-E3DyYd{height:20px;width:20px}.Bz112c-r9oPif{height:24px;width:24px}.Bz112c-r4WDKb{height:42px;width:42px}.Bz112c-uaxL4e{-webkit-border-radius:10px;border-radius:10px}.LgbsSe-Bz112c{display:block}.S9gUrf-YoZ4jf,.S9gUrf-YoZ4jf *{border:none;margin:0;padding:0}.fFW7wc-ibnC6b>.aZ2wEe>div{border-color:#4285f4}.P1ekSe-ZMv3u>div:nth-child(1){background-color:#1a73e8!important}.P1ekSe-ZMv3u>div:nth-child(2),.P1ekSe-ZMv3u>div:nth-child(3){background-image:linear-gradient(to right,rgba(255,255,255,.7),rgba(255,255,255,.7)),linear-gradient(to right,#1a73e8,#1a73e8)!important}.haAclf{display:inline-block}.nsm7Bb-HzV7m-LgbsSe{-webkit-border-radius:4px;border-radius:4px;-webkit-box-sizing:border-box;box-sizing:border-box;-webkit-transition:background-color .218s,border-color .218s;transition:background-color .218s,border-color .218s;-webkit-user-select:none;-webkit-appearance:none;background-color:#fff;background-image:none;border:1px solid #dadce0;color:#3c4043;cursor:pointer;font-family:"Google Sans",arial,sans-serif;font-size:14px;height:40px;letter-spacing:0.25px;outline:none;overflow:hidden;padding:0 12px;position:relative;text-align:center;vertical-align:middle;white-space:nowrap;width:auto}@media screen and (-ms-high-contrast:active){.nsm7Bb-HzV7m-LgbsSe{border:2px solid windowText;color:windowText}}@media screen and (preferes-contrast:more){.nsm7Bb-HzV7m-LgbsSe{color:#000}}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe{font-size:14px;height:32px;letter-spacing:0.25px;padding:0 10px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe{font-size:11px;height:20px;letter-spacing:0.3px;padding:0 8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe{padding:0;width:40px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe{width:32px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe{width:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK{-webkit-border-radius:20px;border-radius:20px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe{-webkit-border-radius:16px;border-radius:16px}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe{-webkit-border-radius:10px;border-radius:10px}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc{border:none;color:#fff}.nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc{background-color:#1a73e8}.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{background-color:#202124;color:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc{color:#fff}}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:18px;margin-right:8px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:14px;min-width:14px;width:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{height:10px;min-width:10px;width:10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin-left:8px;margin-right:-4px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:10px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:8px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c{padding:4px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-top-left-radius:3px;border-top-left-radius:3px;-webkit-border-bottom-left-radius:3px;border-bottom-left-radius:3px;display:-webkit-box;display:-webkit-flex;display:flex;justify-content:center;-webkit-align-items:center;align-items:center;background-color:#fff;height:36px;margin-left:-10px;margin-right:12px;min-width:36px;width:36px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c{margin:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:28px;margin-left:-8px;margin-right:10px;min-width:28px;width:28px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{height:16px;margin-left:-6px;margin-right:8px;min-width:16px;width:16px}.nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-radius:3px;border-radius:3px;margin-left:2px;margin-right:0;padding:0}.nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-radius:18px;border-radius:18px}.nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-radius:14px;border-radius:14px}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-radius:8px;border-radius:8px}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-flex-direction:row;flex-direction:row;justify-content:space-between;-webkit-flex-wrap:nowrap;flex-wrap:nowrap;height:100%;position:relative;width:100%}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX{justify-content:center}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:1;flex-grow:1;font-family:"Google Sans",arial,sans-serif;font-weight:500;overflow:hidden;text-overflow:ellipsis;vertical-align:top}.nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-weight:300}.nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId{-webkit-flex-grow:0;flex-grow:0}.nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe{-webkit-transition:background-color .218s;transition:background-color .218s;bottom:0;left:0;position:absolute;right:0;top:0}.nsm7Bb-HzV7m-LgbsSe:hover,.nsm7Bb-HzV7m-LgbsSe:focus{-webkit-box-shadow:none;box-shadow:none;border-color:rgb(210,227,252);outline:none}.nsm7Bb-HzV7m-LgbsSe:focus-within{outline:2px solid #00639b;border-color:transparent}.nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.08)}.nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(66,133,244,.1)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.24)}.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,.nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe{background:rgba(255,255,255,.32)}.nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY{-webkit-border-radius:50%;border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;height:20px;margin-left:-4px;margin-right:8px;min-width:20px;width:20px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId{font-family:"Roboto";font-size:12px;text-align:left}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf,.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS{overflow:hidden;text-overflow:ellipsis}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;color:#5f6368;fill:#5f6368;font-size:11px;font-weight:400}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#e8eaed;fill:#e8eaed}@media screen and (prefers-contrast:more){.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,.nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff{color:#000;fill:#000}}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c{height:18px;margin:-3px -3px -3px 2px;min-width:18px;width:18px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-top-left-radius:0;border-top-left-radius:0;-webkit-border-bottom-left-radius:0;border-bottom-left-radius:0;-webkit-border-top-right-radius:3px;border-top-right-radius:3px;-webkit-border-bottom-right-radius:3px;border-bottom-right-radius:3px;margin-left:12px;margin-right:-10px}.nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf{-webkit-border-radius:18px;border-radius:18px}.L5Fo6c-sM5MNb{border:0;display:block;left:0;position:relative;top:0}.L5Fo6c-bF1uUb{-webkit-border-radius:4px;border-radius:4px;bottom:0;cursor:pointer;left:0;position:absolute;right:0;top:0}.L5Fo6c-bF1uUb:focus{border:none;outline:none}sentinel{}</style></head>
+  <body style="">
+    <div class="container">
+      <div class="info-section">
+        <div class="logo">TPS</div>
+        <div class="subtitle">Secure Authentication System</div>
+        <ul class="feature-list">
+          <li>🔒 End-to-end encryption</li>
+          <li>📧 Mandatory email verification</li>
+          <li>🌐 Google OAuth login</li>
+          <li>⚡ Secure session management</li>
+          <li>🛡️ Attack protection</li>
+          <li>📱 Responsive interface</li>
+        </ul>
+        <div class="security-info">
+          <h3>🔐 Security</h3>
+          <ul>
+            <li>• Industry security standards</li>
+            <li>• Mandatory HTTPS encryption</li>
+            <li>• Email verification for new accounts</li>
+            <li>• Configured for: canalvivo.org</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="auth-section">
+        <div class="auth-header">
+          <h1>Welcome Back</h1>
+          <p>Sign in to your account or create a new one</p>
+        </div>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+        <div class="alert alert-warning" id="warningAlert"></div>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchTab('login')">Sign In</button>
+          <button class="auth-tab" onclick="switchTab('register')">Register</button>
+          <button class="auth-tab" onclick="switchTab('forgot')">Recover</button>
+        </div>
+
+        <!-- Login Form -->
+        <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="btn-google" onclick="handleGoogleLogin()">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path>
+              <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path>
+              <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path>
+              <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path>
+            </svg>
+            Continue with Google
+          </div>
+
+          <div class="divider">
+            <span>or continue with</span>
+          </div>
+
+          <div class="form-group">
+            <label for="loginEmail">Email</label>
+            <input type="email" id="loginEmail" name="email" required="">
+            <div class="error-message" id="loginEmailError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" name="password" required="">
+            <div class="error-message" id="loginPasswordError"></div>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>Sign In</span>
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </button>
+
+          <div class="forgot-password">
+            <a href="#" onclick="switchTab('forgot')">Forgot your password?</a>
+          </div>
+        </form>
+
+        <!-- Register Form -->
+        <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+          <div class="btn-google" onclick="handleGoogleLogin()">
+            <svg width="20" height="20" viewBox="0 0 24 24">
+              <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path>
+              <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path>
+              <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path>
+              <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path>
+            </svg>
+            Register with Google
+          </div>
+
+          <div class="divider">
+            <span>or register with</span>
+          </div>
+
+          <div class="form-group">
+            <label for="registerName">Full Name</label>
+            <input type="text" id="registerName" name="name" required="">
+            <div class="error-message" id="registerNameError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" name="email" required="">
+            <div class="error-message" id="registerEmailError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" name="password" required="">
+            <div class="error-message" id="registerPasswordError"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="registerConfirmPassword">Confirm Password</label>
+            <input type="password" id="registerConfirmPassword" name="confirmPassword" required="">
+            <div class="error-message" id="registerConfirmPasswordError"></div>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>Create Account</span>
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </button>
+        </form>
+
+        <!-- Forgot Password Form -->
+        <form class="auth-form" id="forgotForm" onsubmit="handleForgotPassword(event)">
+          <div class="form-group">
+            <label for="forgotEmail">Email</label>
+            <input type="email" id="forgotEmail" name="email" required="">
+            <div class="error-message" id="forgotEmailError"></div>
+          </div>
+
+          <button type="submit" class="btn-primary">
+            <span>Send Recovery Link</span>
+            <div class="loading">
+              <div class="spinner"></div>
+            </div>
+          </button>
+
+          <div class="forgot-password">
+            <a href="#" onclick="switchTab('login')">Back to login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let currentTab = 'login';
+      let isLoading = false;
+
+      // Initialize Google Identity Services
+      function initializeGoogleAuth() {
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.id.initialize({
+            client_id: 'YOUR_GOOGLE_CLIENT_ID',
+            callback: handleGoogleCallback,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+        }
+      }
+
+      // Switch between tabs
+      function switchTab(tab) {
+        if (isLoading) return;
+
+        // Update tab buttons
+        document.querySelectorAll('.auth-tab').forEach((btn) => {
+          btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+
+        // Update forms
+        document.querySelectorAll('.auth-form').forEach((form) => {
+          form.classList.remove('active');
+        });
+        document.getElementById(tab + 'Form').classList.add('active');
+
+        currentTab = tab;
+        clearAlerts();
+      }
+
+      // Handle login form submission
+      async function handleLogin(event) {
+        event.preventDefault();
+
+        if (isLoading) return;
+
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+
+        // Validate fields
+        if (!validateLogin(email, password)) {
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          // Simulate API call
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // Check if email is verified (simulate)
+          if (!isEmailVerified(email)) {
+            showAlert(
+              'warning',
+              'Please verify your email before signing in. Check your inbox and spam folder.',
+            );
+            return;
+          }
+
+          // Simulate successful login
+          showAlert('success', 'Login successful! Redirecting...');
+
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 2000);
+        } catch (error) {
+          showAlert('error', 'Login error. Check your credentials and try again.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Handle register form submission
+      async function handleRegister(event) {
+        event.preventDefault();
+
+        if (isLoading) return;
+
+        const name = document.getElementById('registerName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+        // Validate fields
+        if (!validateRegister(name, email, password, confirmPassword)) {
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          // Simulate API call
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // Simulate successful registration
+          showAlert('success', 'Account created successfully! A verification email has been sent to ' + email);
+
+          // Clear form
+          document.getElementById('registerForm').reset();
+
+          // Switch to login tab after 3 seconds
+          setTimeout(() => {
+            switchTab('login');
+          }, 3000);
+        } catch (error) {
+          showAlert('error', 'Error creating account. Please try again later.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Handle forgot password form submission
+      async function handleForgotPassword(event) {
+        event.preventDefault();
+
+        if (isLoading) return;
+
+        const email = document.getElementById('forgotEmail').value;
+
+        if (!validateEmail(email)) {
+          showFieldError('forgotEmailError', 'Please enter a valid email address.');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          // Simulate API call
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          showAlert('success', 'Recovery link sent to ' + email + '. Check your inbox.');
+
+          // Clear form
+          document.getElementById('forgotForm').reset();
+        } catch (error) {
+          showAlert('error', 'Error sending recovery link. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Handle Google login
+      function handleGoogleLogin() {
+        if (isLoading) return;
+
+        // Check if domain is allowed
+        const allowedDomains = ['canalvivo.org', 'app.canalvivo.org'];
+        const currentDomain = window.location.hostname;
+
+        if (!allowedDomains.includes(currentDomain)) {
+          showAlert(
+            'warning',
+            'Google login configured only for: canalvivo.org and app.canalvivo.org. Use email/password for other domains.',
+          );
+          return;
+        }
+
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.id.prompt();
+        } else {
+          // Simulate Google login
+          setLoading(true);
+          setTimeout(() => {
+            showAlert('success', 'Google login successful! Redirecting...');
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 2000);
+            setLoading(false);
+          }, 1500);
+        }
+      }
+
+      // Handle Google callback
+      function handleGoogleCallback(response) {
+        if (isLoading) return;
+
+        setLoading(true);
+
+        try {
+          // Decode JWT token (in real app, validate on server)
+          const userInfo = parseJwt(response.credential);
+
+          showAlert('success', 'Google login successful! Welcome, ' + userInfo.name);
+
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 2000);
+        } catch (error) {
+          showAlert('error', 'Google login error. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Validation functions
+      function validateLogin(email, password) {
+        let isValid = true;
+
+        if (!validateEmail(email)) {
+          showFieldError('loginEmailError', 'Please enter a valid email address.');
+          isValid = false;
+        }
+
+        if (password.length < 6) {
+          showFieldError('loginPasswordError', 'Password must be at least 6 characters long.');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      function validateRegister(name, email, password, confirmPassword) {
+        let isValid = true;
+
+        if (name.length < 2) {
+          showFieldError('registerNameError', 'Name must be at least 2 characters long.');
+          isValid = false;
+        }
+
+        if (!validateEmail(email)) {
+          showFieldError('registerEmailError', 'Please enter a valid email address.');
+          isValid = false;
+        }
+
+        if (!validatePassword(password)) {
+          showFieldError(
+            'registerPasswordError',
+            'Password must be at least 8 characters long, including uppercase, lowercase and number.',
+          );
+          isValid = false;
+        }
+
+        if (password !== confirmPassword) {
+          showFieldError('registerConfirmPasswordError', 'Passwords do not match.');
+          isValid = false;
+        }
+
+        return isValid;
+      }
+
+      function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      }
+
+      function validatePassword(password) {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+      }
+
+      function isEmailVerified(email) {
+        // In real app, check with server
+        // For demo, assume some emails are verified
+        const verifiedEmails = ['admin@canalvivo.org', 'test@canalvivo.org'];
+        return verifiedEmails.includes(email) || email.includes('gmail.com');
+      }
+
+      // UI Helper functions
+      function setLoading(loading) {
+        isLoading = loading;
+        const buttons = document.querySelectorAll('.btn-primary');
+
+        buttons.forEach((btn) => {
+          const span = btn.querySelector('span');
+          const loadingDiv = btn.querySelector('.loading');
+
+          if (loading) {
+            btn.disabled = true;
+            span.style.opacity = '0';
+            loadingDiv.classList.add('show');
+          } else {
+            btn.disabled = false;
+            span.style.opacity = '1';
+            loadingDiv.classList.remove('show');
+          }
+        });
+      }
+
+      function showAlert(type, message) {
+        clearAlerts();
+        const alertId = type + 'Alert';
+        const alert = document.getElementById(alertId);
+
+        if (alert) {
+          alert.textContent = message;
+          alert.classList.add('show');
+
+          // Auto hide after 5 seconds
+          setTimeout(() => {
+            alert.classList.remove('show');
+          }, 5000);
+        }
+      }
+
+      function clearAlerts() {
+        document.querySelectorAll('.alert').forEach((alert) => {
+          alert.classList.remove('show');
+        });
+
+        document.querySelectorAll('.error-message').forEach((error) => {
+          error.style.display = 'none';
+        });
+
+        document.querySelectorAll('input').forEach((input) => {
+          input.classList.remove('error', 'success');
+        });
+      }
+
+      function showFieldError(fieldId, message) {
+        const errorElement = document.getElementById(fieldId);
+        const inputElement = errorElement.parentElement.querySelector('input');
+
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.style.display = 'block';
+          inputElement.classList.add('error');
+        }
+      }
+
+      // Utility functions
+      function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join(''),
+        );
+
+        return JSON.parse(jsonPayload);
+      }
+
+      // Real-time validation
+      document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Google Auth
+        initializeGoogleAuth();
+
+        // Add real-time validation
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach((input) => {
+          input.addEventListener('blur', function () {
+            validateField(this);
+          });
+
+          input.addEventListener('input', function () {
+            if (this.classList.contains('error')) {
+              validateField(this);
+            }
+          });
+        });
+      });
+
+      function validateField(input) {
+        const value = input.value.trim();
+        const name = input.name;
+        const errorElement = input.parentElement.querySelector('.error-message');
+
+        // Clear previous state
+        input.classList.remove('error', 'success');
+        errorElement.style.display = 'none';
+
+        if (!value) return;
+
+        let isValid = true;
+        let errorMessage = '';
+
+        switch (name) {
+          case 'email':
+            isValid = validateEmail(value);
+            errorMessage = 'Please enter a valid email address.';
+            break;
+
+          case 'password':
+            if (input.id === 'registerPassword') {
+              isValid = validatePassword(value);
+              errorMessage = 'Password must be at least 8 characters long, including uppercase, lowercase and number.';
+            } else {
+              isValid = value.length >= 6;
+              errorMessage = 'Password must be at least 6 characters long.';
+            }
+            break;
+
+          case 'confirmPassword':
+            const passwordInput = document.getElementById('registerPassword');
+            isValid = value === passwordInput.value;
+            errorMessage = 'Passwords do not match.';
+            break;
+
+          case 'name':
+            isValid = value.length >= 2;
+            errorMessage = 'Name must be at least 2 characters long.';
+            break;
+        }
+
+        if (isValid) {
+          input.classList.add('success');
+        } else {
+          input.classList.add('error');
+          errorElement.textContent = errorMessage;
+          errorElement.style.display = 'block';
+        }
+      }
+
+      // Handle page visibility change
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) {
+          // Page is hidden, pause any ongoing operations
+          clearAlerts();
+        }
+      });
+
+      // Security: Clear sensitive data on page unload
+      window.addEventListener('beforeunload', function () {
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
+        passwordInputs.forEach((input) => {
+          input.value = '';
+        });
+      });
+    </script>
+  
+</body></html>
