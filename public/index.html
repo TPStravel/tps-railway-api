@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS - The Poetic Suitcase - Plataforma Completa de Viagens Luxury</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #FFD700;
+            --secondary-gold: rgba(212, 175, 55, 0.8);
+            --gold-subtle: rgba(212, 175, 55, 0.1);
+            --deep-black: #0a0a0a;
+            --rich-black: #1a1a1a;
+            --accent-black: #0f0f0f;
+            --text-primary: rgba(255, 255, 255, 0.9);
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --border-luxury: rgba(212, 175, 55, 0.3);
+            --font-primary: 'Times New Roman', serif;
+            --transition-smooth: all 0.4s ease;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, 
+                var(--deep-black) 0%, 
+                var(--rich-black) 50%, 
+                var(--accent-black) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .authority-sidebar {
+            width: 320px;
+            background: linear-gradient(180deg, 
+                rgba(8, 8, 15, 0.98) 0%, 
+                rgba(15, 15, 25, 0.98) 100%);
+            border-right: 1px solid var(--border-luxury);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .tps-logo {
+            font-size: 28px;
+            color: var(--primary-gold);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+
+        .tps-tagline {
+            font-size: 11px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .authority-stats {
+            background: var(--gold-subtle);
+            padding: 12px;
+            border: 1px solid var(--border-luxury);
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .stats-number {
+            font-size: 18px;
+            color: var(--primary-gold);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .stats-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: var(--secondary-gold);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            cursor: pointer;
+        }
+
+        .service-item {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 3px;
+        }
+
+        .service-item:hover {
+            background: var(--gold-subtle);
+            border-color: var(--border-luxury);
+            transform: translateX(3px);
+        }
+
+        .service-item.clickable {
+            border-left: 3px solid var(--primary-gold);
+        }
+
+        .service-name {
+            font-size: 11px;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .service-count {
+            font-size: 9px;
+            color: var(--secondary-gold);
+            background: var(--gold-subtle);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        /* ÁREA PRINCIPAL */
+        .main-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navigation {
+            background: rgba(5, 5, 10, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .nav-button {
+            background: linear-gradient(145deg, 
+                rgba(15, 15, 25, 0.95) 0%,
+                rgba(25, 25, 35, 0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            font-family: var(--font-primary);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+            border-radius: 5px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            color: var(--primary-gold);
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .nav-button .emoji {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        /* ÁREA DE CONTEÚDO */
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.3) 0%, 
+                rgba(10, 10, 20, 0.4) 50%,
+                rgba(0, 0, 0, 0.3) 100%);
+            min-height: 600px;
+            overflow-y: auto;
+        }
+
+        .welcome-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* 15 CARDS LUXURY */
+        .luxury-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 1500px;
+            padding: 0 20px;
+        }
+
+        .luxury-card {
+            position: relative;
+            height: 260px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: linear-gradient(145deg, 
+                rgba(8, 8, 15, 0.9) 0%, 
+                rgba(15, 15, 25, 0.9) 100%);
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(212, 175, 55, 0.3);
+            border-color: rgba(212, 175, 55, 0.6);
+        }
+
+        .luxury-card-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(50, 50, 60, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* TEXTO DE BOAS-VINDAS */
+        .welcome-content {
+            max-width: 900px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            color: var(--primary-gold);
+            letter-spacing: 4px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .welcome-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            letter-spacing: 0.6px;
+            margin-bottom: 25px;
+        }
+
+        .highlight-text {
+            color: var(--primary-gold);
+            font-weight: 400;
+        }
+
+        /* CHAT AREA */
+        .chat-area {
+            width: 100%;
+            max-width: 1200px;
+            background: linear-gradient(145deg, 
+                rgba(8, 8, 15, 0.95) 0%, 
+                rgba(15, 15, 25, 0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .chat-title {
+            color: var(--primary-gold);
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .chat-subtitle {
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .chat-messages {
+            height: 350px;
+            overflow-y: auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+
+        .chat-message.tps {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-primary);
+            margin-right: 20%;
+        }
+
+        .chat-message.user {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-left: 20%;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 15px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(15, 15, 25, 0.9);
+            border: 1px solid var(--border-luxury);
+            color: white;
+            padding: 14px 18px;
+            font-family: var(--font-primary);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(145deg, 
+                var(--primary-gold) 0%,
+                rgba(255, 215, 0, 0.8) 100%);
+            color: #000;
+            border: none;
+            padding: 14px 20px;
+            font-family: var(--font-primary);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        .chat-send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary-gold);
+            font-size: 12px;
+            font-style: italic;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--secondary-gold);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        @keyframes goldShimmer {
+            0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 1200px) {
+            .luxury-showcase {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .top-navigation {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .authority-sidebar {
+                width: 100%;
+                max-height: 200px;
+                padding: 20px;
+                flex-direction: row;
+                gap: 20px;
+                overflow-x: auto;
+            }
+            .sidebar-section {
+                min-width: 200px;
+            }
+            .top-navigation {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 15px 20px;
+            }
+            .luxury-showcase {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-navigation {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 10px;
+                min-height: 40px;
+            }
+            .welcome-title {
+                font-size: 28px;
+            }
+            .luxury-card {
+                height: 200px;
+            }
+            .chat-area {
+                margin: 15px;
+                padding: 20px;
+            }
+            .chat-messages {
+                height: 250px;
+            }
+            .chat-input-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="main-layout">
+        <!-- SIDEBAR -->
+        <div class="authority-sidebar">
+            <div class="sidebar-header">
+                <div class="tps-logo">TPS</div>
+                <div class="tps-tagline">The Poetic Suitcase</div>
+                <div class="authority-stats">
+                    <div class="stats-number">95+</div>
+                    <div class="stats-label">Fornecedores Premium</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">✈️ Airlines Premium</div>
+                <div class="service-item clickable" onclick="openAffiliate('trip')">
+                    <span class="service-name">Trip.com</span>
+                    <span class="service-count">Global</span>
+                </div>
+                <div class="service-item clickable" onclick="openAffiliate('kiwi')">
+                    <span class="service-name">Kiwi.com</span>
+                    <span class="service-count">190+ países</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🏛️ Hospedagem</div>
+                <div class="service-item clickable" onclick="openAffiliate('booking')">
+                    <span class="service-name">Booking.com</span>
+                    <span class="service-count">Premium</span>
+                </div>
+                <div class="service-item clickable" onclick="openAffiliate('hotellook')">
+                    <span class="service-name">Hotellook</span>
+                    <span class="service-count">Luxury</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🚗 Mobilidade</div>
+                <div class="service-item clickable" onclick="openAffiliate('rentalcars')">
+                    <span class="service-name">RentalCars</span>
+                    <span class="service-count">Global</span>
+                </div>
+                <div class="service-item clickable" onclick="openAffiliate('kiwitaxi')">
+                    <span class="service-name">KiwiTaxi</span>
+                    <span class="service-count">VIP</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🛡️ Proteção</div>
+                <div class="service-item clickable" onclick="openAffiliate('airhelp')">
+                    <span class="service-name">AirHelp</span>
+                    <span class="service-count">Compensação</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">📡 Conectividade</div>
+                <div class="service-item clickable" onclick="openAffiliate('airalo')">
+                    <span class="service-name">Airalo E-SIM</span>
+                    <span class="service-count">180+ países</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🎁 Experiências</div>
+                <div class="service-item clickable" onclick="openAffiliate('tiqets')">
+                    <span class="service-name">Tiqets</span>
+                    <span class="service-count">Ingressos</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÁREA PRINCIPAL -->
+        <div class="main-content-area">
+            <div class="top-navigation">
+                <div class="nav-button">
+                    <span class="emoji">✈️</span>Voos Premium
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🏛️</span>Hotéis Luxury
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🚗</span>Transporte
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🛡️</span>Proteção
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">📡</span>E-SIM
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🎁</span>Experiências
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">📝</span>Comunidade
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🚢</span>Cruise Luxury
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="welcome-area">
+                    <!-- 15 CARDS LUXURY -->
+                    <div class="luxury-showcase">
+                        <!-- CARD 1: Hotel Premium -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('primeira-imagem.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Voo Premium -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('segunda-imagem.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: Poético Voos -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🌌</div>
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; line-height: 1.3;">
+                                    Acima das Nuvens, um Chamado Silencioso
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 12px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 25px;">
+                                    Há um instante, entre o embarque e o nascer do céu, em que o tempo desacelera. Você sente o tecido do assento envolver seus pensamentos, e percebe que esta não é apenas uma viagem. É uma travessia.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 11px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                    Feche os olhos. Escute o silêncio do luxo. E permita que o mundo revele um novo caminho.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 4: BMW Montanhas -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('bmw-montanhas.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 5: Interior Luxury -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('interior-luxury.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 6: Poético Transport -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🚘</div>
+                                <h3 style="color: var(--primary-gold); font-size: 18px; font-weight: 400; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">
+                                    Travessia Silenciosa
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 13px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 25px;">
+                                    Não se trata de chegar rápido — mas de <strong>atravessar com presença</strong>. Dentro ou fora, estrada ou montanha, há veículos que conduzem o corpo... e outros que <em>transportam o espírito</em>.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                    ✨ <em>Cada quilômetro é uma meditação em movimento.</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 7: E-SIM -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('maldivas-villa.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 8: Pacotes -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('praia-tropical.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 9: Poético Hotéis -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(5, 15, 25, 0.95), rgba(10, 25, 35, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 18px; margin-bottom: 15px; animation: goldShimmer 3s ease-in-out infinite;">🌺</div>
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.5px; margin-bottom: 15px; text-transform: uppercase;">
+                                    Refúgio dos Sonhos Tropicais
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; margin-bottom: 15px;">
+                                    <strong>Onde o céu se dissolve no mar, e o tempo se curva ao prazer.</strong> Neste santuário sobre águas cristalinas, cada detalhe convida você a mergulhar em uma experiência que não se mede em estrelas, mas em suspiros.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 11px; line-height: 1.5; letter-spacing: 0.5px; font-style: italic;">
+                                    ✨ <strong>Acorde com o som do azul... Adormeça com o toque do vento...</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 10: Cruise tropical -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('cruise-tropical.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 11: Cruise arctic -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('cruise-arctic.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 12: Poético Experiência -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(25, 15, 35, 0.95), rgba(35, 25, 45, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🛳️</div>
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.8px; margin-bottom: 20px; text-transform: uppercase; line-height: 1.3;">
+                                    Navegar é Despertar para Outros Horizontes
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 13px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 20px;">
+                                    Os cruzeiros não são apenas viagens… são travessias da alma. A cada porto, uma nova história. A cada pôr do sol, um recomeço.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                    🌅 <em>Porque alguns destinos não se encontram no mapa, mas nas marés do coração.</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 13: Flight Delayed -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('flight-delayed.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 14: Flight Cancelled -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('flight-cancelled.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 15: AirHelp -->
+                        <div class="luxury-card" onclick="window.open('https://www.airhelp.com/en/?a_aid=Travelpayouts&data1=f72be463d65943ddb242862fe-639764', '_blank')" style="background: linear-gradient(135deg, rgba(15, 25, 35, 0.95), rgba(25, 35, 45, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4); cursor: pointer;">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">✈️</div>
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.5px; margin-bottom: 15px; text-transform: uppercase;">
+                                    Seu voo atrasou ou foi cancelado?
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 13px; line-height: 1.7; letter-spacing: 0.6px; margin-bottom: 15px;">
+                                    Você pode receber até <strong style="color: var(--primary-gold);">$650 de compensação</strong>, sem precisar pagar nada antes.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.5; letter-spacing: 0.5px; font-style: italic;">
+                                    📌 <em>Porque até as jornadas interrompidas merecem um destino justo.</em>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEXTO DE BOAS-VINDAS -->
+                    <div class="welcome-content">
+                        <h1 class="welcome-title">Bem-vindo ao TPS</h1>
+                        <p class="welcome-description">
+                            Você acabou de conhecer nosso universo de possibilidades. Agora é hora de 
+                            <span class="highlight-text">transformar seus sonhos em itinerários reais</span>. 
+                            Nosso assistente inteligente está pronto para 
+                            <span class="highlight-text">curar sua próxima jornada extraordinária</span> 
+                            com a precisão de quem compreende que viajar é mais que deslocar-se: 
+                            <span class="highlight-text">é renascer a cada destino</span>.
+                        </p>
+                    </div>
+
+                    <!-- CHAT INTELIGENTE -->
+                    <div class="chat-area">
+                        <div class="chat-header">
+                            <h3 class="chat-title">Assistente TPS Inteligente</h3>
+                            <p class="chat-subtitle">Curador de Jornadas Extraordinárias & Concierge Poético</p>
+                        </div>
+                        
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="chat-message tps">
+                                🌌 Saudações, explorador de horizontes distantes... Sou seu curador pessoal de jornadas extraordinárias. Que destino sussurra ao seu coração neste momento? ✨
+                            </div>
+                        </div>
+
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span>TPS está pensando</span>
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <input 
+                                type="text" 
+                                class="chat-input" 
+                                id="chatInput"
+                                placeholder="Compartilhe seus sonhos de viagem... ✈️🏝️🚢"
+                                maxlength="500"
+                            >
+                            <button class="chat-send-btn" id="chatSendBtn">
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const CONFIG = {
+        API_BASE: 'http://localhost:8080'
+    };
+
+    const AFFILIATE_LINKS = {
+        trip: 'https://tp.media/r?marker=639764&trs=425649&p=8626&u=https%3A%2F%2Ftrip.com',
+        kiwi: 'https://tp.media/r?marker=639764&trs=425649&p=11843&u=https%3A%2F%2Fkiwi.com',
+        booking: 'https://tp.media/r?marker=639764&trs=425649&p=2326&u=https%3A%2F%2Fbooking.com',
+        hotellook: 'https://tp.media/r?marker=639764&trs=425649&p=2046&u=https%3A%2F%2Fhotellook.com',
+        rentalcars: 'https://tp.media/r?marker=639764&trs=425649&p=2119&u=https%3A%2F%2Frentalcars.com',
+        kiwitaxi: 'https://tp.media/r?marker=639764&trs=425649&p=12730&u=https%3A%2F%2Fkiwitaxi.com',
+        airalo: 'https://tp.media/r?marker=639764&trs=425649&p=15818&u=https%3A%2F%2Fairalo.com',
+        tiqets: 'https://tp.media/r?marker=639764&trs=425649&p=12794&u=https%3A%2F%2Ftiqets.com',
+        airhelp: 'https://www.airhelp.com/en/?a_aid=Travelpayouts&data1=f72be463d65943ddb242862fe-639764'
+    };
+
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSendBtn');
+    const chatMessages = document.getElementById('chatMessages');
+    const typingIndicator = document.getElementById('typingIndicator');
+
+    const CATEGORY_KEYWORDS = {
+        voos: ['voo', 'voos', 'voar', 'passagem', 'aviao', 'avião', 'aeroporto'],
+        hoteis: ['hotel', 'hoteis', 'hospedagem', 'pousada', 'resort', 'quarto'],
+        transporte: ['carro', 'aluguel', 'transfer', 'taxi', 'uber'],
+        protecao: ['seguro', 'protecao', 'emergencia', 'cancelamento'],
+        esim: ['internet', 'esim', 'chip', 'wifi', 'dados'],
+        experiencias: ['ingresso', 'tour', 'passeio', 'atividade']
+    };
+
+    function detectCategory(message) {
+        const normalized = message.toLowerCase();
+        
+        for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+            for (const keyword of keywords) {
+                if (normalized.includes(keyword)) {
+                    return category;
+                }
+            }
+        }
+        return 'geral';
+    }
+
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        chatInput.disabled = true;
+        chatSendBtn.disabled = true;
+        
+        addUserMessage(message);
+        chatInput.value = '';
+        showTypingIndicator();
+        
+        try {
+            const category = detectCategory(message);
+            const response = await processMessage(message, category);
+            
+            hideTypingIndicator();
+            addTpsMessage(response);
+        } catch (error) {
+            hideTypingIndicator();
+            addTpsMessage("✨ Algo interrompeu nossa conversa... Tente novamente.");
+        } finally {
+            chatInput.disabled = false;
+            chatSendBtn.disabled = false;
+            chatInput.focus();
+        }
+    }
+
+    async function processMessage(message, category) {
+        try {
+            const response = await fetch(`${CONFIG.API_BASE}/api/chat/message`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-User-Language': 'pt'
+                },
+                body: JSON.stringify({
+                    sessionId: 'session_' + Date.now(),
+                    message: message
+                })
+            });
+
+            const data = await response.json();
+            return data.response;
+        } catch (error) {
+            return getFallbackResponse(category);
+        }
+    }
+
+    function getFallbackResponse(category) {
+        const fallbacks = {
+            voos: "✈️ Os ventos do destino sussurram... Que tal explorar nossas opções de 'Voos Premium'? ✨",
+            hoteis: "🏛️ Santuários de luxo aguardam... Visite 'Hotéis Luxury' e descubra refúgios extraordinários. 🌟",
+            transporte: "🚗 Cada jornada começa com movimento... Explore 'Transporte' para travessias com estilo. ✨",
+            protecao: "🛡️ Segurança liberta a aventura... 'Proteção' oferece tranquilidade para voos altos. 💫",
+            esim: "📡 Permaneça conectado... 'E-SIM Global' mantém você presente em todos os mundos. 🌐",
+            experiencias: "🎁 Tesouros ocultos aguardam... 'Experiências' revela segredos de viajantes conscientes. ✨"
+        };
+        
+        return fallbacks[category] || "🌟 Como posso ajudar a curar sua próxima jornada extraordinária? ✨";
+    }
+
+    function addUserMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message user';
+        messageDiv.textContent = `👤 ${message}`;
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function addTpsMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message tps';
+        messageDiv.innerHTML = message;
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+    }
+
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+
+    function scrollToBottom() {
+        setTimeout(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 100);
+    }
+
+    window.openAffiliate = function(provider) {
+        const link = AFFILIATE_LINKS[provider];
+        if (link) {
+            window.open(link, '_blank');
+        }
+    };
+
+    chatSendBtn.addEventListener('click', sendMessage);
+    
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    chatInput.focus();
+
+    console.log('🌟 TPS Sistema Luxury Inicializado!');
+});
+</script>
+</body>
+</html>

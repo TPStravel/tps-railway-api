@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS - The Poetic Suitcase - Plataforma Completa de Viagens Luxury</title>
+    
+    <style>
+        /* RESET E VARIÁVEIS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gold: #FFD700;
+            --secondary-gold: rgba(212, 175, 55, 0.8);
+            --gold-subtle: rgba(212, 175, 55, 0.1);
+            --deep-black: #0a0a0a;
+            --rich-black: #1a1a1a;
+            --accent-black: #0f0f0f;
+            --text-primary: rgba(255, 255, 255, 0.9);
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --border-luxury: rgba(212, 175, 55, 0.3);
+            --font-primary: 'Times New Roman', serif;
+            --spacing-xs: 8px;
+            --spacing-sm: 15px;
+            --spacing-md: 25px;
+            --spacing-lg: 40px;
+            --spacing-xl: 60px;
+            --transition-smooth: all 0.4s ease;
+            --transition-quick: all 0.3s ease;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, 
+                var(--deep-black) 0%, 
+                var(--rich-black) 50%, 
+                var(--accent-black) 100%);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* SELETOR DE IDIOMAS */
+        .language-selector {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 10000;
+            font-family: var(--font-primary);
+        }
+
+        .language-current {
+            background: linear-gradient(145deg, 
+                rgba(8, 8, 15, 0.95) 0%, 
+                rgba(15, 15, 25, 0.95) 100%);
+            border: 1px solid var(--border-luxury);
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(20px);
+            min-width: 120px;
+            border-radius: 5px;
+        }
+
+        .language-current:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+
+        .lang-flag {
+            font-size: 14px;
+        }
+
+        .lang-name {
+            color: var(--text-primary);
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            flex: 1;
+        }
+
+        .lang-arrow {
+            color: var(--secondary-gold);
+            font-size: 10px;
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .authority-sidebar {
+            width: 320px;
+            background: linear-gradient(180deg, 
+                rgba(8, 8, 15, 0.98) 0%, 
+                rgba(15, 15, 25, 0.98) 50%,
+                rgba(8, 8, 15, 0.98) 100%);
+            border-right: 1px solid var(--border-luxury);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(20px);
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .tps-logo {
+            font-family: var(--font-primary);
+            font-size: 28px;
+            color: var(--primary-gold);
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            background: linear-gradient(45deg, #FFD700, #FFA500, #FFD700);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes goldShimmer {
+            0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+        }
+
+        .tps-logo:hover {
+            transform: scale(1.1) translateY(-2px);
+        }
+
+        .tps-tagline {
+            font-size: 11px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .authority-stats {
+            background: var(--gold-subtle);
+            padding: 12px;
+            border: 1px solid var(--border-luxury);
+            text-align: center;
+            transition: var(--transition-smooth);
+            border-radius: 5px;
+        }
+
+        .authority-stats:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stats-number {
+            font-size: 18px;
+            color: var(--primary-gold);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .stats-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: var(--secondary-gold);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .service-item {
+            padding: var(--spacing-xs) 12px;
+            margin-bottom: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 3px;
+        }
+
+        .service-item:hover {
+            background: var(--gold-subtle);
+            border-color: var(--border-luxury);
+            transform: translateX(3px);
+        }
+
+        .service-name {
+            font-size: 11px;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .service-count {
+            font-size: 9px;
+            color: var(--secondary-gold);
+            background: var(--gold-subtle);
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        /* ÁREA PRINCIPAL */
+        .main-content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navigation {
+            background: rgba(5, 5, 10, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            backdrop-filter: blur(20px);
+            z-index: 50;
+        }
+
+        .nav-button {
+            background: linear-gradient(145deg, 
+                rgba(15, 15, 25, 0.95) 0%,
+                rgba(25, 25, 35, 0.95) 50%,
+                rgba(15, 15, 25, 0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            font-family: var(--font-primary);
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+            border-radius: 5px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            color: var(--primary-gold);
+            border-color: rgba(212, 175, 55, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.25);
+        }
+
+        .nav-button .emoji {
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        /* ÁREA DE CONTEÚDO */
+        .dropdown-area {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.3) 0%, 
+                rgba(10, 10, 20, 0.4) 50%,
+                rgba(0, 0, 0, 0.3) 100%);
+            min-height: 600px;
+        }
+
+        /* ÁREA DE BOAS-VINDAS */
+        .welcome-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 600px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            width: 100%;
+        }
+
+        /* 15 CARDS LUXURY */
+        .luxury-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: var(--spacing-xl);
+            width: 100%;
+            max-width: 1500px;
+            padding: 0 20px;
+        }
+
+        .luxury-card {
+            position: relative;
+            height: 260px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: linear-gradient(145deg, 
+                rgba(8, 8, 15, 0.9) 0%, 
+                rgba(15, 15, 25, 0.9) 100%);
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(212, 175, 55, 0.3);
+            border-color: rgba(212, 175, 55, 0.6);
+        }
+
+        .luxury-card-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(50, 50, 60, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* TEXTO DE BOAS-VINDAS */
+        .welcome-content {
+            max-width: 900px;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            color: var(--primary-gold);
+            letter-spacing: 4px;
+            margin-bottom: var(--spacing-lg);
+            text-transform: uppercase;
+            font-weight: 400;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .welcome-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            letter-spacing: 0.6px;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .highlight-text {
+            color: var(--primary-gold);
+            font-weight: 400;
+        }
+
+        /* CHAT INTELIGENTE OTIMIZADO */
+        .chat-area {
+            width: 100%;
+            max-width: 1200px;
+            background: linear-gradient(145deg, 
+                rgba(8, 8, 15, 0.95) 0%, 
+                rgba(15, 15, 25, 0.95) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: var(--spacing-md);
+        }
+
+        .chat-title {
+            color: var(--primary-gold);
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .chat-subtitle {
+            color: var(--text-secondary);
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .chat-messages {
+            height: 350px;
+            overflow-y: auto;
+            padding: var(--spacing-md);
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: var(--spacing-md);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-message {
+            margin-bottom: var(--spacing-sm);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            letter-spacing: 0.3px;
+        }
+
+        .chat-message.tps {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--text-primary);
+            margin-right: 20%;
+        }
+
+        .chat-message.user {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            margin-left: 20%;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(15, 15, 25, 0.9);
+            border: 1px solid var(--border-luxury);
+            color: white;
+            padding: 14px 18px;
+            font-family: var(--font-primary);
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            border-radius: 8px;
+            transition: var(--transition-quick);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(212, 175, 55, 0.8);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-style: italic;
+        }
+
+        .chat-send-btn {
+            background: linear-gradient(145deg, 
+                var(--primary-gold) 0%,
+                rgba(255, 215, 0, 0.8) 100%);
+            color: #000;
+            border: none;
+            padding: 14px 20px;
+            font-family: var(--font-primary);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .chat-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+        }
+
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            color: var(--secondary-gold);
+            font-size: 12px;
+            font-style: italic;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            background: var(--secondary-gold);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 1500px) {
+            .luxury-showcase {
+                max-width: 1300px;
+                gap: 16px;
+            }
+            .luxury-card {
+                height: 240px;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .luxury-showcase {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 900px;
+                gap: 15px;
+            }
+            .luxury-card {
+                height: 220px;
+            }
+            .top-navigation {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .authority-sidebar {
+                width: 100%;
+                max-height: 200px;
+                overflow-y: auto;
+                padding: 20px;
+                flex-direction: row;
+                gap: 20px;
+            }
+            .sidebar-section {
+                min-width: 200px;
+                margin-right: 20px;
+            }
+            .top-navigation {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 15px 20px;
+                gap: 8px;
+            }
+            .luxury-showcase {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 0 15px;
+            }
+            .luxury-card {
+                height: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .language-selector {
+                top: 15px;
+                right: 15px;
+            }
+            .language-current {
+                padding: 6px 10px;
+                min-width: 100px;
+            }
+            .lang-name {
+                font-size: 10px;
+            }
+            .top-navigation {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 10px;
+                min-height: 40px;
+            }
+            .welcome-title {
+                font-size: 28px;
+            }
+            .luxury-showcase {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 0 10px;
+            }
+            .luxury-card {
+                height: 180px;
+            }
+            .chat-area {
+                margin: var(--spacing-md);
+                padding: var(--spacing-md);
+            }
+            .chat-messages {
+                height: 200px;
+            }
+            .chat-input-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SELETOR DE IDIOMAS -->
+    <div class="language-selector">
+        <div class="language-current">
+            <span class="lang-flag">🇧🇷</span>
+            <span class="lang-name">Português</span>
+            <span class="lang-arrow">▼</span>
+        </div>
+    </div>
+
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="main-layout">
+        <!-- SIDEBAR -->
+        <div class="authority-sidebar">
+            <div class="sidebar-header">
+                <div class="tps-logo">TPS</div>
+                <div class="tps-tagline">The Poetic Suitcase</div>
+                <div class="authority-stats">
+                    <div class="stats-number">95+</div>
+                    <div class="stats-label">Fornecedores Premium</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">✈️ Airlines Premium</div>
+                <div class="service-item">
+                    <span class="service-name">Companhias Aéreas</span>
+                    <span class="service-count">25</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Cobertura Global</span>
+                    <span class="service-count">190+ países</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🏛️ Hospedagem</div>
+                <div class="service-item">
+                    <span class="service-name">Redes Hoteleiras</span>
+                    <span class="service-count">22</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Luxury a Econômico</span>
+                    <span class="service-count">4 categorias</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🚗 Mobilidade</div>
+                <div class="service-item">
+                    <span class="service-name">Aluguel & Transfers</span>
+                    <span class="service-count">8</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Pickups VIP</span>
+                    <span class="service-count">Global</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🛡️ Segurança</div>
+                <div class="service-item">
+                    <span class="service-name">Seguros Premium</span>
+                    <span class="service-count">6</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Compensação Voos</span>
+                    <span class="service-count">3</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">📡 Conectividade</div>
+                <div class="service-item">
+                    <span class="service-name">E-SIM Global</span>
+                    <span class="service-count">5</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Cobertura Mundial</span>
+                    <span class="service-count">180+ países</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">🎁 Experiências</div>
+                <div class="service-item">
+                    <span class="service-name">Pacotes Completos</span>
+                    <span class="service-count">15</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Tours Temáticos</span>
+                    <span class="service-count">9 categorias</span>
+                </div>
+            </div>
+            <!-- NOVA SEÇÃO: CONECTIVIDADE GLOBAL -->
+            <div class="sidebar-section">
+                <div class="section-title">📡 Conectividade Global</div>
+                <div class="service-item">
+                    <span class="service-name">E-SIM Worldwide</span>
+                    <span class="service-count">8</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Dados Ilimitados</span>
+                    <span class="service-count">180+ países</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Ativação Instantânea</span>
+                    <span class="service-count">24/7</span>
+                </div>
+            </div>
+
+            <!-- NOVA SEÇÃO: CRUZEIROS PREMIUM -->
+            <div class="sidebar-section">
+                <div class="section-title">🚢 Cruzeiros Premium</div>
+                <div class="service-item">
+                    <span class="service-name">Companhias Luxury</span>
+                    <span class="service-count">12</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Rotas Exclusivas</span>
+                    <span class="service-count">50+ destinos</span>
+                </div>
+                <div class="service-item">
+                    <span class="service-name">Suítes Premium</span>
+                    <span class="service-count">VIP</span>
+                </div>
+            </div>
+        </div>
+        
+
+              <!-- ÁREA PRINCIPAL -->
+        <div class="main-content-area">
+            <div class="top-navigation">
+                <div class="nav-button">
+                    <span class="emoji">✈️</span>Voos Premium
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🏛️</span>Hotéis Luxury
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🚗</span>Transporte
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🛡️</span>Proteção
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">📡</span>E-SIM
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🎁</span>Pacotes
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">📝</span>Comunidade TPS
+                </div>
+                <div class="nav-button">
+                    <span class="emoji">🚢</span>Cruise Luxury
+                </div>
+            </div>
+
+            <div class="dropdown-area">
+                <div class="welcome-area">
+                    <!-- 15 CARDS LUXURY -->
+                    <div class="luxury-showcase">
+                        <!-- CARD 1: Hotel Premium -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('primeira-imagem.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 2: Voo Premium -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('segunda-imagem.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 3: Poético Voos -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+        
+                            <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🌌</div>
+        
+                            <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 2px; margin-bottom: 25px; text-transform: uppercase; line-height: 1.3;">
+                                Acima das Nuvens, um Chamado Silencioso
+                            </h3>
+        
+                            <p style="color: var(--text-primary); font-size: 12px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 25px;">
+                                Há um instante, entre o embarque e o nascer do céu, em que o tempo desacelera. Você sente o tecido do assento envolver seus pensamentos, e percebe que esta não é apenas uma viagem. É uma travessia.
+                            </p>
+        
+                            <p style="color: var(--secondary-gold); font-size: 11px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                Feche os olhos. Escute o silêncio do luxo. E permita que o mundo revele um novo caminho.
+                            </p>
+        
+                        </div>
+                    </div>
+
+                        <!-- CARD 4: BMW Montanhas -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('bmw-montanhas.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 5: Interior Luxury -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('interior-luxury.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 6: Poético Transport -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(10, 10, 20, 0.95), rgba(20, 20, 30, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 30px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🚘</div>
+                                <h3 style="color: var(--primary-gold); font-size: 18px; font-weight: 400; letter-spacing: 2px; margin-bottom: 20px; text-transform: uppercase;">
+                                    Travessia Silenciosa
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 13px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 25px;">
+                                    Não se trata de chegar rápido — mas de <strong>atravessar com presença</strong>. Dentro ou fora, estrada ou montanha, há veículos que conduzem o corpo... e outros que <em>transportam o espírito</em>.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                    ✨ <em>Cada quilômetro é uma meditação em movimento.</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 7: E-SIM -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('maldivas-villa.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 8: Pacotes -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('praia-tropical.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 9: Poético Hotéis -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(5, 15, 25, 0.95), rgba(10, 25, 35, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                <div style="color: var(--primary-gold); font-size: 18px; margin-bottom: 15px; animation: goldShimmer 3s ease-in-out infinite;">🌺</div>
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.5px; margin-bottom: 15px; text-transform: uppercase;">
+                                    Refúgio dos Sonhos Tropicais
+                                </h3>
+                                <p style="color: var(--text-primary); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; margin-bottom: 15px;">
+                                    <strong>Onde o céu se dissolve no mar, e o tempo se curva ao prazer.</strong> Neste santuário sobre águas cristalinas, cada detalhe convida você a mergulhar em uma experiência que não se mede em estrelas, mas em suspiros.
+                                </p>
+                                <p style="color: var(--secondary-gold); font-size: 11px; line-height: 1.5; letter-spacing: 0.5px; font-style: italic; margin-bottom: 10px;">
+                                    ✨ <strong>Acorde com o som do azul... Adormeça com o toque do vento...</strong>
+                                </p>
+                                <p style="color: var(--text-secondary); font-size: 10px; line-height: 1.4; letter-spacing: 0.4px; font-style: italic;">
+                                    🛎️ <em>Experimente uma estadia onde luxo é harmonia com o extraordinário.</em>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- CARD 10: Cruise tropical -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('cruise-tropical.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 11: Cruise arctic -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('cruise-arctic.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 12: Poético Experiência -->
+                        <div class="luxury-card" style="background: linear-gradient(135deg, rgba(25, 15, 35, 0.95), rgba(35, 25, 45, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4);">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+        
+                            <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">🛳️</div>
+        
+                            <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.8px; margin-bottom: 20px; text-transform: uppercase; line-height: 1.3;">
+                                Navegar é Despertar para Outros Horizontes
+                            </h3>
+        
+                            <p style="color: var(--text-primary); font-size: 13px; line-height: 1.8; letter-spacing: 0.8px; font-style: italic; margin-bottom: 20px;">
+                                Os cruzeiros não são apenas viagens… são travessias da alma. A cada porto, uma nova história. A cada pôr do sol, um recomeço. No ritmo sereno das ondas, o tempo desacelera — e você se reconecta com o que é essencial.
+                            </p>
+        
+                            <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.6; letter-spacing: 0.6px; font-style: italic;">
+                                🌅 <em>Porque alguns destinos não se encontram no mapa, mas nas marés do coração.</em>
+                            </p>
+        
+                        </div>
+                    </div>
+
+                        <!-- CARD 13: Flight Delayed -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('flight-delayed.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 14: Flight Cancelled -->
+                        <div class="luxury-card">
+                            <div class="luxury-card-image" style="background-image: url('flight-cancelled.jpg');">
+                            </div>
+                        </div>
+
+                        <!-- CARD 15: Compensação de Voos - Link AirHelp -->
+                        <div class="luxury-card" onclick="window.open('https://www.airhelp.com/en/?a_aid=Travelpayouts&data1=f72be463d65943ddb242862fe-639764&utm_campaign=aff-Travelpayouts&utm_medium=affiliate&utm_source=pap', '_blank')" style="background: linear-gradient(135deg, rgba(15, 25, 35, 0.95), rgba(25, 35, 45, 0.98)); border: 2px solid rgba(212, 175, 55, 0.4); cursor: pointer;">
+                            <div style="padding: 25px; height: 100%; display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                                
+                                <div style="color: var(--primary-gold); font-size: 20px; margin-bottom: 20px; animation: goldShimmer 3s ease-in-out infinite;">✈️</div>
+
+                                <h3 style="color: var(--primary-gold); font-size: 16px; font-weight: 400; letter-spacing: 1.5px; margin-bottom: 15px; text-transform: uppercase;">
+                                    Seu voo atrasou ou foi cancelado?
+                                </h3>
+
+                                <p style="color: var(--text-primary); font-size: 13px; line-height: 1.7; letter-spacing: 0.6px; margin-bottom: 15px;">
+                                    Quando o avião não decola, o tempo vira parte da viagem — e a espera pesa no corpo, na mente… e no bolso. Mas mesmo no imprevisto, seus direitos seguem firmes: você pode receber até <strong style="color: var(--primary-gold);">$650 de compensação</strong>, sem precisar pagar nada antes.
+                                </p>
+
+                                <p style="color: var(--secondary-gold); font-size: 12px; line-height: 1.5; letter-spacing: 0.5px; font-style: italic;">
+                                    📌 <em>Porque até as jornadas interrompidas merecem um destino justo.</em>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TEXTO DE BOAS-VINDAS -->
+                    <div class="welcome-content">
+                        <h1 class="welcome-title">Bem-vindo ao TPS</h1>
+                        <p class="welcome-description">
+                            Você acabou de conhecer nosso universo de possibilidades. Agora é hora de 
+                            <span class="highlight-text">transformar seus sonhos em itinerários reais</span>. 
+                            Nosso assistente inteligente está pronto para 
+                            <span class="highlight-text">curar sua próxima jornada extraordinária</span> 
+                            com a precisão de quem compreende que viajar é mais que deslocar-se: 
+                            <span class="highlight-text">é renascer a cada destino</span>.
+                        </p>
+                    </div>
+
+                    <!-- CHAT INTELIGENTE -->
+                    <div class="chat-area">
+                        <div class="chat-header">
+                            <h3 class="chat-title">Assistente TPS Inteligente</h3>
+                            <p class="chat-subtitle">Curador de Jornadas Extraordinárias & Concierge Poético</p>
+                        </div>
+                        
+                        <div class="chat-messages">
+                            <div class="chat-message tps">
+                                🌌 Saudações, explorador de horizontes distantes... Sou seu curador pessoal de jornadas extraordinárias. Que destino sussurra ao seu coração neste momento? ✨
+                            </div>
+                        </div>
+
+                        <!-- TYPING INDICATOR -->
+                        <div class="typing-indicator">
+                            <span>TPS está digitando</span>
+                            <div class="typing-dots">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <input 
+                                type="text" 
+                                class="chat-input" 
+                                placeholder="Compartilhe seus sonhos de viagem... ✈️🏝️🚢"
+                                maxlength="500"
+                            >
+                            <button class="chat-send-btn">
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// 🧠 SISTEMA DE CHAT INTELIGENTE POÉTICO TPS
+// ═══════════════════════════════════════════════════════════════════
+// Versão: 2.0 - Sistema de detecção de categorias + respostas poéticas
+// Data: 2025
+// Autor: TPS Development Team
+// ═══════════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function() {
+    const chatInput = document.querySelector('.chat-input');
+    const chatSendBtn = document.querySelector('.chat-send-btn');
+    const chatMessages = document.querySelector('.chat-messages');
+    const typingIndicator = document.querySelector('.typing-indicator');
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🎯 SISTEMA DE DETECÇÃO DE CATEGORIAS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const categoryKeywords = {
+        // ✈️ VOOS
+        voos: {
+            keywords: [
+                'voo', 'voos', 'voar', 'passagem', 'passagens', 'aviao', 'avião', 
+                'aeroporto', 'companhia aerea', 'companhia aérea', 'airlines', 
+                'embarque', 'decolagem', 'pousar', 'turbulencia', 'turbulência',
+                'business class', 'primeira classe', 'economy', 'executiva',
+                'check-in', 'bagagem', 'voo direto', 'conexao', 'conexão',
+                'milhas', 'pontos', 'upgrade', 'assento', 'janela', 'corredor'
+            ],
+            responses: [
+                "✈️ Voar não é apenas chegar ao destino... é elevar-se acima do ordinário e tocar as nuvens com os sonhos. Permita-me curar uma experiência aérea que transforme cada quilômetro em altitude em poetry pura. 🌌 Explore nossos 'Voos Premium' para descobrir companhias que compreendem que luxo é silêncio, espaço e presença.",
+                
+                "🌅 Há algo mágico no momento em que as rodas se desprendem do chão... É quando você percebe que não está apenas viajando, mas atravessando dimensões. Nossos parceiros em 'Voos Premium' oferecem mais que transporte: são portais para experiências extraordinárias. ✨ Que tal começarmos a desenhar sua rota pelos céus?",
+                
+                "🪶 Cada voo é uma meditação em movimento, onde o tempo se curva e o espaço se expande. Entre nuvens e estrelas, você não apenas se desloca... você se transforma. Visite nossa seção 'Voos Premium' e descubra como 25 companhias aéreas podem elevar sua jornada a níveis de pure poetry. 🌌",
+                
+                "⭐ Voar é a arte de confiar no invisível, de abraçar o vazio entre o partir e o chegar. Cada decolagem é um ato de fé... cada pouso, um renascimento. Explore nossos 'Voos Premium' e permita que sua próxima viagem seja uma sinfonia composta nas alturas. ✈️✨"
+            ]
+        },
+
+        // 🏛️ HOTÉIS
+        hoteis: {
+            keywords: [
+                'hotel', 'hoteis', 'hotéis', 'hospedagem', 'pousada', 'resort',
+                'quarto', 'suite', 'suíte', 'reserva', 'acomodacao', 'acomodação',
+                'luxury', 'luxo', 'premium', 'cinco estrelas', '5 estrelas',
+                'spa', 'piscina', 'room service', 'concierge', 'vista mar',
+                'all inclusive', 'cafe da manha', 'café da manhã', 'check-in',
+                'check-out', 'estadia', 'pernoite', 'dormir', 'cama', 'travesseiro'
+            ],
+            responses: [
+                "🏛️ Refúgios de luxo não são apenas lugares para dormir... são santuários onde a alma encontra paz e o corpo redescobre o prazer de simplesmente ser. Cada detalhe sussurra histórias de conforto elevado à arte. 🌺 Acesse nossos 'Hotéis Luxury' e descubra 22 redes que transformam estadia em experiência transcendental.",
+                
+                "🌙 Um verdadeiro hotel é como um poema arquitetônico: cada linha, cada espaço, cada silêncio foi pensado para embalar seus sonhos e despertar seus sentidos. Do econômico ao extraordinário, temos 4 categorias que honram diferentes formas de vivenciar o luxo. ✨ Visite 'Hotéis Luxury' e encontre seu refúgio perfeito.",
+                
+                "🛎️ Hospedagem não é sobre ocupar um espaço... é sobre permitir que o espaço cuide de você. Onde cada fio de algodão é uma carícia, cada vista é um quadro, cada serviço é uma extensão da sua própria vontade de ser cuidado. 🌸 Explore 'Hotéis Luxury' e descubra como transformar descanso em ritual de renovação.",
+                
+                "🌅 Entre essas paredes que respiram elegância, você não apenas dorme... você sonha em alta definição. Cada amanhecer traz a promessa de um dia curado com precisão artística. Visite 'Hotéis Luxury' e permita que nossas 22 redes hoteleiras reescrevam sua definição de hospitalidade. ✨🏛️"
+            ]
+        },
+
+        // 🚗 TRANSPORTE
+        transporte: {
+            keywords: [
+                'carro', 'aluguel', 'transfer', 'transporte', 'taxi', 'uber',
+                'pickup', 'traslado', 'veiculo', 'veículo', 'motorista',
+                'aeroporto transfer', 'rent a car', 'aluguel de carro',
+                'vip transport', 'transporte executivo', 'limousine',
+                'van', 'onibus', 'ônibus', 'metro', 'metrô', 'trem',
+                'mobilidade', 'deslocamento', 'locomocao', 'locomoção'
+            ],
+            responses: [
+                "🚗 Cada estrada é um poema esperando para ser lido... cada quilômetro, uma estrofe de descobertas. Transporte não é apenas movimento: é a arte de atravessar paisagens externas enquanto navegamos territórios internos. 🛣️ Confira nosso 'Transporte' e descubra como 8 parceiros transformam deslocamento em jornada contemplativa.",
+                
+                "🌄 Há veículos que conduzem o corpo... e outros que transportam o espírito. Quando você escolhe bem, cada curva da estrada se torna uma revelação, cada parada um momento de presença pura. ✨ Explore nossa seção 'Transporte' e permita que nossos pickups VIP globais elevem cada travessia à categoria de experiência sensorial.",
+                
+                "🚘 Viajar não é sobre a velocidade do chegar... mas sobre a qualidade do atravessar. No silêncio de um carro premium ou na vista panorâmica de uma van luxury, cada momento do trajeto se transforma em parte integral da memória. 🌟 Visite 'Transporte' e descubra como tornar o caminho tão extraordinário quanto o destino.",
+                
+                "⭐ Mobilidade é poetry em movimento: você não apenas muda de lugar, você dança com a geografia, dialoga com horizontes, abraça distâncias. Cada transfer se torna uma oportunidade de contemplação móvel. 🚗✨ Acesse 'Transporte' e permita que transformemos seus deslocamentos em rituais de descoberta."
+            ]
+        },
+
+        // 🛡️ PROTEÇÃO/SEGURO
+        protecao: {
+            keywords: [
+                'seguro', 'protecao', 'proteção', 'cobertura', 'assistencia', 'assistência',
+                'emergencia', 'emergência', 'medico', 'médico', 'saude', 'saúde',
+                'acidente', 'doenca', 'doença', 'hospital', 'bagagem perdida',
+                'cancelamento', 'atraso', 'compensacao', 'compensação', 'airhelp',
+                'reembolso', 'indenizacao', 'indenização', 'seguranca', 'segurança',
+                'travel insurance', 'proteger', 'cuidado', 'tranquilidade'
+            ],
+            responses: [
+                "🛡️ Segurança é mais que um escudo... é a liberdade de se entregar completamente à experiência, sabendo que você está amparado por cuidado genuíno. Como um anjo guardian invisível, nossa proteção permite que você voe alto sem receios. ⭐ Clique em 'Proteção' e descubra 6 seguros premium + 3 parceiros de compensação que transformam tranquilidade em arte.",
+                
+                "🌟 Proteger-se não é um ato de medo... é um gesto de amor próprio que permite que a coragem floresça sem limites. Quando você sabe que está cuidado, cada passo se torna mais leve, cada aventura mais profunda. ✨ Visite 'Proteção' e encontre coberturas que honram sua jornada com a reverência que ela merece.",
+                
+                "🫧 Como uma bolha de cuidado que te acompanha silenciosamente, nossa proteção é quase imperceptível... mas sempre presente. Você viaja sabendo que, se precisar, seremos sua ponte de volta ao equilíbrio. 🛡️ Explore 'Proteção' e descubra como nossos 6 seguros premium criam uma rede de amparo global ao seu redor.",
+                
+                "💙 Viajar protegido é como carregar um coração extra: você sente a presença reconfortante de quem cuida, mesmo à distância. Cada aventura se torna mais intensa quando a segurança liberta sua coragem. ✨ Acesse 'Proteção' e permita que nossos parceiros sejam seus guardiões invisíveis de cada momento extraordinário."
+            ]
+        },
+
+        // 📡 E-SIM/CONECTIVIDADE
+        esim: {
+            keywords: [
+                'internet', 'esim', 'e-sim', 'chip', 'conexao', 'conexão',
+                'wifi', 'wi-fi', 'dados', 'roaming', 'celular', 'telefone',
+                'whatsapp', 'instagram', 'facebook', 'redes sociais',
+                'conectividade', 'sinal', 'rede', 'comunicacao', 'comunicação',
+                'online', 'offline', 'digital', 'tecnologia', 'smartphone'
+            ],
+            responses: [
+                "📡 Conectar-se não é apenas sobre tecnologia... é sobre permanecer presente com quem você ama, mesmo quando está explorando mundos distantes. Como fios invisíveis que tecem distâncias, nossa conectividade mantém seu coração próximo de casa enquanto sua alma viaja livre. 🌐 Acesse 'E-SIM' e descubra como 5 parceiros garantem que você nunca esteja truly sozinho em 180+ países.",
+                
+                "✨ Estar conectado é como carregar um portal para casa no bolso: você pode se perder nas aventuras sabendo que uma mensagem pode trazer de volta o sorriso de quem ama. Nossa conectividade global é a ponte entre a liberdade de explorar e o conforto de permanecer próximo. 📱 Visite 'E-SIM' e mantenha-se presente em todos os mundos que habitamos.",
+                
+                "🌍 Em tempos digitais, conexão é oxygen: você respira melhor sabendo que pode compartilhar cada pôr do sol, cada descoberta, cada momento de pure wonder instantaneamente. Nossa rede global é como um abraço tecnológico que nunca te abandona. 📡 Explore 'E-SIM' e transforme dados ilimitados em pontes ilimitadas para o coração.",
+                
+                "💫 Conectividade é a arte moderna de estar em múltiplos lugares simultaneamente: fisicamente explorando novos horizontes, digitalmente abraçando quem ficou. Com ativação instantânea 24/7, você jamais perderá um momento de intimidade com o mundo. 🌐 Clique em 'E-SIM' e descubra como permanecer connected com tudo que importa em 180+ países."
+            ]
+        },
+
+        // 🚢 CRUZEIROS
+        cruzeiros: {
+            keywords: [
+                'cruzeiro', 'cruzeiros', 'navio', 'embarcacao', 'embarcação',
+                'cruise', 'mar', 'oceano', 'cabine', 'porto', 'itinerario', 'itinerário',
+                'deck', 'capitao', 'capitão', 'navegacao', 'navegação', 'costa',
+                'mediterrano', 'caribe', 'fjord', 'alaska', 'pacifico', 'pacífico',
+                'atlantico', 'atlântico', 'royal caribbean', 'msc', 'costa cruzeiros',
+                'all inclusive mar', 'buffet', 'entretenimento', 'show', 'cassino'
+            ],
+            responses: [
+                "🚢 Navegar é despertar para outros horizontes... onde cada onda sussurra histórias antigas e cada porto guarda segredos novos. Nos cruzeiros, você não apenas viaja: você dança com oceanos, dialoga com infinitos, abraça a poesia líquida do mundo. 🌊 Role até 'Cruise Luxury' e descubra como 12 companhias transformam navegação em transcendência através de 50+ destinos exclusivos.",
+                
+                "⚓ Há algo hypnotic no ritmo das ondas... como se o mar fosse um metrônomo gigante marcando o tempo de uma sinfonia maior. A bordo, você não conta dias: você coleciona pôres do sol, abraça horizontes infinitos, respira eternidade marinha. 🌅 Visite 'Cruise Luxury' e permita que suítes premium se tornem seu camarote para a adventure oceânica definitiva.",
+                
+                "🌊 Cruzeiros são poetry em movimento perpétuo: você acorda em um país e dorme em outro, sempre embalado pelo mesmo oceano que conecta todos os continentes. Cada refeição é vista para o infinito, cada noite uma contemplação das estrelas refletidas na água. ✨ Explore 'Cruise Luxury' e descubra rotas que redefinem o conceito de liberdade.",
+                
+                "🛳️ Navegar é a arte de confiar no movimento, de abraçar a incerteza como companheira de jornada. Entre marés e horizontes, você redescobre que home não é um lugar: é uma sensação de pertencimento ao vast wonder do mundo. 🌟 Acesse 'Cruise Luxury' e permita que o oceano seja seu guia para experiências que transcendem mapas."
+            ]
+        },
+
+        // 👥 COMUNIDADE
+        comunidade: {
+            keywords: [
+                'comunidade', 'grupo', 'rede', 'conectar', 'amigos', 'pessoas',
+                'social', 'compartilhar', 'experiencias', 'experiências', 'forum', 'fórum',
+                'chat', 'conversa', 'dicas', 'sugestoes', 'sugestões', 'reviews',
+                'avaliacoes', 'avaliações', 'recomendacoes', 'recomendações',
+                'viajantes', 'exploradores', 'aventureiros', 'nomades', 'nômades',
+                'contatos', 'networking', 'encontros', 'meetup'
+            ],
+            responses: [
+                "👥 Viajar sozinho é descobrir o mundo... viajar connected é descobrir mundos dentro de mundos através dos olhos de outros exploradores. Nossa comunidade é uma constelação de almas aventureiras que compartilham não apenas destinos, mas transformações. ✨ Junte-se à 'Comunidade TPS' e descubra que as melhores jornadas acontecem quando corações curious se conectam.",
+                
+                "🌟 Cada viajante carrega universos únicos de histórias, insights e magic moments que, quando compartilhados, multiplicam exponencialmente a richness de todas as experiências. Somos uma tribe de exploradores poéticos. 💫 Visite 'Comunidade TPS' e permita que nossa rede transforme suas adventures em symphonies coletivas de descoberta.",
+                
+                "🌍 Na era digital, comunidade é o novo luxury: pessoas reais compartilhando experiences autênticas, criando bridges between souls que transcendem geography. Aqui você encontra não apenas travel tips, mas life perspectives que expand horizons internos. ✨ Conecte-se à 'Comunidade TPS' e descubra que traveling together amplifies the poetry of every journey.",
+                
+                "💎 Nossa comunidade é como uma family escolhida de wanderers: unidos não por blood, mas por curiosidade, wonder e amor pela arte de explorar com presence e depth. Cada membro adiciona uma nova color à palette coletiva. 🎨 Acesse 'Comunidade TPS' e torne-se parte de uma constellation de almas que viajam com heart wide open."
+            ]
+        },
+
+        // 🌐 CROSS-MARKETING (TEMARIX, BOCANA, LIMINAX)
+        crossmarketing: {
+            keywords: [
+                'temarix', 'bocana', 'liminax', 'outros produtos', 'portfolio',
+                'mais servicos', 'mais serviços', 'outras opcoes', 'outras opções',
+                'diversificacao', 'diversificação', 'ecosistema', 'ecossistema',
+                'plataforma', 'tecnologia', 'inovacao', 'inovação', 'startup',
+                'digital', 'futuro', 'trends', 'tendencias', 'tendências'
+            ],
+            responses: [
+                "🌐 O universo TPS é apenas uma face de um prisma maior... Temarix revela dimensions criativas, Bocana explora fronteiras gastronômicas e Liminax transcende limites tecnológicos. Juntos formamos um ecosystem de experiências que honram different facets da curiosidade humana. ✨ Cada plataforma é um portal para discoveries únicas que se complementam poeticamente.",
+                
+                "💫 Como constelações que brilham em harmony, nosso portfolio digital oferece múltiplas languages para a same passion: elevated experiences. TPS curates jornadas geográficas, enquanto Temarix, Bocana e Liminax expandem territories de creativity, flavor e innovation. 🌟 Explore esse multiverse de possibilidades que speaks to every dimension of sophisticated living.",
+                
+                "🎭 Somos architects de um ecosystem onde travel meets creativity meets gastronomy meets technology. TPS é sua gateway para world exploration, mas Temarix, Bocana e Liminax aguardam para expand sua definition de adventure além geography. ✨ Cada platform é designed para souls que seek depth em multiple universos of experience.",
+                
+                "🌅 Nossa vision transcende borders: criar um constellation de platforms que nurture different aspects da human curiosity. Enquanto TPS guia suas journeys físicas, Temarix, Bocana e Liminax await para enrich suas explorations criativas, gastronômicas e tecnológicas. 💎 Together we craft a holistic approach to elevated living."
+            ]
+        }
+    };
+
+    // ═══════════════════════════════════════════════════════════════════
+    // 🧠 SISTEMA DE DETECÇÃO INTELIGENTE
+    // ═══════════════════════════════════════════════════════════════════
+    
+    function detectCategory(message) {
+        const normalizedMessage = message.toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+            .replace(/[^\w\s]/g, ' ') // Remove pontuação
+            .trim();
+        
+        let bestMatch = { category: null, score: 0 };
+        
+        // Verifica cada categoria
+        for (const [category, data] of Object.entries(categoryKeywords)) {
+            let score = 0;
+            
+            // Conta quantas palavras-chave da categoria estão presentes
+            for (const keyword of data.keywords) {
+                const normalizedKeyword = keyword.toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '');
+                
+                if (normalizedMessage.includes(normalizedKeyword)) {
+                    // Palavras maiores têm score maior
+                    score += normalizedKeyword.length;
+                }
+            }
+            
+            // Atualiza o melhor match se encontrar score maior
+            if (score > bestMatch.score) {
+                bestMatch = { category, score };
+            }
+        }
+        
+        // Retorna a categoria se o score for significativo
+        return bestMatch.score >= 3 ? bestMatch.category : 'geral';
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 💬 RESPOSTAS GERAIS POÉTICAS (Fallback)
+    // ═══════════════════════════════════════════════════════════════════
+    
+    const generalResponses = [
+        "🌟 Cada palavra que você compartilha carrega a energy de dreams esperando para se materializarem... Permita-me curar uma experiência que transcenda suas expectations mais audaciosas. Que aspect da sua próxima jornada gostaríamos de explorar juntos? ✨",
+        
+        "✨ Vejo poetry em seus desejos de travel... Como um artisan de experiências, vou tecer um itinerário que desperte cada um dos seus sentidos e alimente sua alma aventureira. Que destination whispers mais alto ao seu coração neste momento? 🌍",
+        
+        "🗺️ Suas palavras revelam um explorer nato, alguém que compreende que true journeys acontecem tanto fora quanto dentro de nós. Vou criar uma experiência que honre essa depth. Em que região do mundo sua curiosity está mais intensa agora? 💫",
+        
+        "🌌 Sinto que esta conversation é o beginning de algo extraordinário... Como um curator de moments inesquecíveis, estou aqui para transformar seus wanderlust desires em memories que brilharão para sempre. Que tipo de adventure fala mais profundamente à sua alma? ⭐",
+        
+        "🎭 Que inspiração encontrar alguém que entende que viajar é mais que movement between places... é transformation between states of being. Vou orquestrar cada detalhe para que sua experience seja uma symphony de descobertas. Por onde começamos essa poetic journey? ✨🌟"
+    ];
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 📱 FUNÇÕES DE INTERFACE
+    // ═══════════════════════════════════════════════════════════════════
+    
+    function addUserMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message user';
+        messageDiv.innerHTML = `👤 ${message}`;
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function addTpsMessage(message) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'chat-message tps';
+        messageDiv.innerHTML = message;
+        chatMessages.appendChild(messageDiv);
+        scrollToBottom();
+    }
+    
+    function showTypingIndicator() {
+        typingIndicator.style.display = 'flex';
+        scrollToBottom();
+    }
+    
+    function hideTypingIndicator() {
+        typingIndicator.style.display = 'none';
+    }
+    
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🎯 FUNÇÃO PRINCIPAL DE PROCESSAMENTO
+    // ═══════════════════════════════════════════════════════════════════
+    
+    function processMessage(message) {
+        // Detecta a categoria
+        const category = detectCategory(message);
+        
+        // Seleciona resposta baseada na categoria
+        let response;
+        if (category !== 'geral' && categoryKeywords[category]) {
+            const responses = categoryKeywords[category].responses;
+            response = responses[Math.floor(Math.random() * responses.length)];
+        } else {
+            response = generalResponses[Math.floor(Math.random() * generalResponses.length)];
+        }
+        
+        return response;
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🚀 FUNÇÃO DE ENVIO DE MENSAGEM
+    // ═══════════════════════════════════════════════════════════════════
+    
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (message === '') return;
+        
+        // Adiciona mensagem do usuário
+        addUserMessage(message);
+        
+        // Limpa o input
+        chatInput.value = '';
+        
+        // Mostra indicador de digitação
+        showTypingIndicator();
+        
+        // Processa mensagem e responde após delay
+        setTimeout(() => {
+            hideTypingIndicator();
+            const response = processMessage(message);
+            addTpsMessage(response);
+        }, 1500); // Delay de 1.5 segundos para simular "pensamento"
+    }
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🎮 EVENT LISTENERS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    chatSendBtn.addEventListener('click', sendMessage);
+    
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    
+    // Focus no input ao carregar
+    chatInput.focus();
+    
+    // ═══════════════════════════════════════════════════════════════════
+    // 🎨 ANIMAÇÕES VISUAIS ADICIONAIS
+    // ═══════════════════════════════════════════════════════════════════
+    
+    // Efeito de hover nos nav-buttons para destacar categorias
+    const navButtons = document.querySelectorAll('.nav-button');
+    navButtons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+            this.style.boxShadow = '0 12px 30px rgba(212, 175, 55, 0.35)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    console.log('🌟 TPS Sistema Inteligente Poético v2.0 Inicializado com Sucesso! ✨');
+    console.log('📊 Categorias ativas:', Object.keys(categoryKeywords));
+    console.log('🎯 Sistema de detecção: Ativo');
+    console.log('💫 Respostas poéticas: Carregadas');
+    console.log('🚀 Chat concierge: Ready to curate extraordinary journeys!');
+});
+</script>
+</body>
+</html>

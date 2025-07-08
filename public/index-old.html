@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS - The Poetic Suitcase | Travel Personal Secretary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .language-selector {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .language-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .lang-btn {
+            background: rgba(255,255,255,0.3);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 10px 5px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255,255,255,0.4);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            padding: 40px;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .welcome-section h2 {
+            color: #4f46e5;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-section p {
+            color: #6b7280;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .examples {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .examples h3 {
+            color: #374151;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .examples ul {
+            list-style: none;
+        }
+        
+        .examples li {
+            background: white;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4f46e5;
+            color: #374151;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .chat-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        
+        .message.user {
+            background: #4f46e5;
+            color: white;
+            margin-left: auto;
+        }
+        
+        .message.assistant {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .chat-input:focus {
+            border-color: #4f46e5;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .stats-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #6b7280;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .language-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧳 TPS Railway</h1>
+            <p id="subtitle">The Poetic Suitcase - Seu Assistente Pessoal de Viagens</p>
+            
+            <div class="language-selector">
+                <div style="color: white; font-weight: 600; margin-bottom: 10px;" id="lang-label">Escolha seu idioma / Choose your language:</div>
+                <div class="language-grid">
+                    <button class="lang-btn active" data-lang="pt">🇧🇷 PT</button>
+                    <button class="lang-btn" data-lang="en">🇺🇸 EN</button>
+                    <button class="lang-btn" data-lang="es">🇪🇸 ES</button>
+                    <button class="lang-btn" data-lang="fr">🇫🇷 FR</button>
+                    <button class="lang-btn" data-lang="de">🇩🇪 DE</button>
+                    <button class="lang-btn" data-lang="it">🇮🇹 IT</button>
+                    <button class="lang-btn" data-lang="ja">🇯🇵 JA</button>
+                    <button class="lang-btn" data-lang="zh">🇨🇳 ZH</button>
+                    <button class="lang-btn" data-lang="ar">🇸🇦 AR</button>
+                    <button class="lang-btn" data-lang="ru">🇷🇺 RU</button>
+                    <button class="lang-btn" data-lang="ko">🇰🇷 KO</button>
+                    <button class="lang-btn" data-lang="hi">🇮🇳 HI</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="welcome-section">
+                <h2 id="welcome-title">Bem-vindo ao seu assistente de viagens inteligente!</h2>
+                <p id="welcome-text">Sou seu assistente pessoal de viagens com IA. Posso ajudar você a planejar viagens, encontrar hotéis, sugerir destinos e muito mais. Converso em 12 idiomas diferentes!</p>
+            </div>
+            
+            <div class="examples">
+                <h3 id="examples-title">Exemplos do que posso fazer:</h3>
+                <ul id="examples-list">
+                    <li>"Quero viajar para Tóquio em agosto"</li>
+                    <li>"Preciso de hotel em Paris para 3 pessoas"</li>
+                    <li>"Busco seguro viagem para Europa"</li>
+                    <li>"Qual é a melhor época para ir ao Japão?"</li>
+                    <li>"Roteiro de 7 dias em Lisboa"</li>
+                </ul>
+            </div>
+            
+            <div class="chat-section">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message assistant" id="initial-message">
+                        Olá! Sou seu assistente de viagens. Como posso ajudar você hoje?
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" class="chat-input" placeholder="Digite sua mensagem...">
+                    <button id="send-btn" class="send-btn">→</button>
+                </div>
+                <div class="loading" id="loading">Processando sua mensagem...</div>
+            </div>
+            
+            <div class="stats-section">
+                <h3 id="stats-title">Sistema Global Ativo</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label" id="stat-languages">Idiomas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-users">1,247</div>
+                        <div class="stat-label" id="stat-users-label">Usuários</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-chats">8,532</div>
+                        <div class="stat-label" id="stat-chats-label">Conversas</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label" id="stat-available">Disponível</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE = window.location.origin + '/api';
+        
+        // Global variables
+        let currentLanguage = 'pt';
+        let sessionId = 'session_' + Date.now();
+        
+        // Translations object
+        const translations = {
+            pt: {
+                subtitle: "The Poetic Suitcase - Seu Assistente Pessoal de Viagens",
+                langLabel: "Escolha seu idioma:",
+                welcomeTitle: "Bem-vindo ao seu assistente de viagens inteligente!",
+                welcomeText: "Sou seu assistente pessoal de viagens com IA. Posso ajudar você a planejar viagens, encontrar hotéis, sugerir destinos e muito mais. Converso em 12 idiomas diferentes!",
+                examplesTitle: "Exemplos do que posso fazer:",
+                examples: [
+                    '"Quero viajar para Tóquio em agosto"',
+                    '"Preciso de hotel em Paris para 3 pessoas"',
+                    '"Busco seguro viagem para Europa"',
+                    '"Qual é a melhor época para ir ao Japão?"',
+                    '"Roteiro de 7 dias em Lisboa"'
+                ],
+                placeholder: "Digite sua mensagem...",
+                initialMessage: "Olá! Sou seu assistente de viagens. Como posso ajudar você hoje?",
+                statsTitle: "Sistema Global Ativo",
+                statLabels: {
+                    languages: "Idiomas",
+                    users: "Usuários",
+                    chats: "Conversas",
+                    available: "Disponível"
+                }
+            },
+            en: {
+                subtitle: "The Poetic Suitcase - Your Personal Travel Secretary",
+                langLabel: "Choose your language:",
+                welcomeTitle: "Welcome to your intelligent travel assistant!",
+                welcomeText: "I'm your AI-powered personal travel assistant. I can help you plan trips, find hotels, suggest destinations and much more. I speak 12 different languages!",
+                examplesTitle: "Examples of what I can do:",
+                examples: [
+                    '"I want to travel to Tokyo in August"',
+                    '"I need a hotel in Paris for 3 people"',
+                    '"Looking for travel insurance for Europe"',
+                    '"What\'s the best time to visit Japan?"',
+                    '"7-day itinerary for Lisbon"'
+                ],
+                placeholder: "Type your message...",
+                initialMessage: "Hello! I'm your travel assistant. How can I help you today?",
+                statsTitle: "Global System Active",
+                statLabels: {
+                    languages: "Languages",
+                    users: "Users",
+                    chats: "Conversations",
+                    available: "Available"
+                }
+            },
+            es: {
+                subtitle: "The Poetic Suitcase - Tu Secretario Personal de Viajes",
+                langLabel: "Elige tu idioma:",
+                welcomeTitle: "¡Bienvenido a tu asistente inteligente de viajes!",
+                welcomeText: "Soy tu asistente personal de viajes con IA. Puedo ayudarte a planificar viajes, encontrar hoteles, sugerir destinos y mucho más. ¡Hablo 12 idiomas diferentes!",
+                examplesTitle: "Ejemplos de lo que puedo hacer:",
+                examples: [
+                    '"Quiero viajar a Tokio en agosto"',
+                    '"Necesito un hotel en París para 3 personas"',
+                    '"Busco seguro de viaje para Europa"',
+                    '"¿Cuál es la mejor época para ir a Japón?"',
+                    '"Itinerario de 7 días en Lisboa"'
+                ],
+                placeholder: "Escribe tu mensaje...",
+                initialMessage: "¡Hola! Soy tu asistente de viajes. ¿Cómo puedo ayudarte hoy?",
+                statsTitle: "Sistema Global Activo",
+                statLabels: {
+                    languages: "Idiomas",
+                    users: "Usuarios",
+                    chats: "Conversaciones",
+                    available: "Disponible"
+                }
+            },
+            fr: {
+                subtitle: "The Poetic Suitcase - Votre Secrétaire Personnel de Voyage",
+                langLabel: "Choisissez votre langue:",
+                welcomeTitle: "Bienvenue dans votre assistant de voyage intelligent!",
+                welcomeText: "Je suis votre assistant personnel de voyage alimenté par l'IA. Je peux vous aider à planifier des voyages, trouver des hôtels, suggérer des destinations et bien plus encore. Je parle 12 langues différentes!",
+                examplesTitle: "Exemples de ce que je peux faire:",
+                examples: [
+                    '"Je veux voyager à Tokyo en août"',
+                    '"J\'ai besoin d\'un hôtel à Paris pour 3 personnes"',
+                    '"Je cherche une assurance voyage pour l\'Europe"',
+                    '"Quelle est la meilleure période pour aller au Japon?"',
+                    '"Itinéraire de 7 jours à Lisbonne"'
+                ],
+                placeholder: "Tapez votre message...",
+                initialMessage: "Bonjour! Je suis votre assistant de voyage. Comment puis-je vous aider aujourd'hui?",
+                statsTitle: "Système Global Actif",
+                statLabels: {
+                    languages: "Langues",
+                    users: "Utilisateurs",
+                    chats: "Conversations",
+                    available: "Disponible"
+                }
+            },
+            de: {
+                subtitle: "The Poetic Suitcase - Ihr Persönlicher Reisesekretär",
+                langLabel: "Wählen Sie Ihre Sprache:",
+                welcomeTitle: "Willkommen bei Ihrem intelligenten Reiseassistenten!",
+                welcomeText: "Ich bin Ihr KI-betriebener persönlicher Reiseassistent. Ich kann Ihnen beim Planen von Reisen, Finden von Hotels, Vorschlagen von Zielen und vielem mehr helfen. Ich spreche 12 verschiedene Sprachen!",
+                examplesTitle: "Beispiele für das, was ich tun kann:",
+                examples: [
+                    '"Ich möchte im August nach Tokio reisen"',
+                    '"Ich brauche ein Hotel in Paris für 3 Personen"',
+                    '"Suche Reiseversicherung für Europa"',
+                    '"Wann ist die beste Zeit für eine Japan-Reise?"',
+                    '"7-Tage-Reiseplan für Lissabon"'
+                ],
+                placeholder: "Geben Sie Ihre Nachricht ein...",
+                initialMessage: "Hallo! Ich bin Ihr Reiseassistent. Wie kann ich Ihnen heute helfen?",
+                statsTitle: "Globales System Aktiv",
+                statLabels: {
+                    languages: "Sprachen",
+                    users: "Benutzer",
+                    chats: "Gespräche",
+                    available: "Verfügbar"
+                }
+            },
+            it: {
+                subtitle: "The Poetic Suitcase - Il Tuo Segretario Personale di Viaggio",
+                langLabel: "Scegli la tua lingua:",
+                welcomeTitle: "Benvenuto nel tuo assistente di viaggio intelligente!",
+                welcomeText: "Sono il tuo assistente personale di viaggio alimentato dall'IA. Posso aiutarti a pianificare viaggi, trovare hotel, suggerire destinazioni e molto altro ancora. Parlo 12 lingue diverse!",
+                examplesTitle: "Esempi di quello che posso fare:",
+                examples: [
+                    '"Voglio viaggiare a Tokyo ad agosto"',
+                    '"Ho bisogno di un hotel a Parigi per 3 persone"',
+                    '"Cerco assicurazione viaggio per l\'Europa"',
+                    '"Qual è il periodo migliore per andare in Giappone?"',
+                    '"Itinerario di 7 giorni a Lisbona"'
+                ],
+                placeholder: "Digita il tuo messaggio...",
+                initialMessage: "Ciao! Sono il tuo assistente di viaggio. Come posso aiutarti oggi?",
+                statsTitle: "Sistema Globale Attivo",
+                statLabels: {
+                    languages: "Lingue",
+                    users: "Utenti",
+                    chats: "Conversazioni",
+                    available: "Disponibile"
+                }
+            },
+            ja: {
+                subtitle: "The Poetic Suitcase - あなたの個人旅行秘書",
+                langLabel: "言語を選択してください:",
+                welcomeTitle: "インテリジェント旅行アシスタントへようこそ！",
+                welcomeText: "私はAI搭載の個人旅行アシスタントです。旅行の計画、ホテル検索、目的地の提案などをお手伝いできます。12の言語を話すことができます！",
+                examplesTitle: "私ができることの例:",
+                examples: [
+                    '"8月に東京に旅行したいです"',
+                    '"パリで3人用のホテルが必要です"',
+                    '"ヨーロッパ旅行保険を探しています"',
+                    '"日本を訪れるのに最適な時期はいつですか？"',
+                    '"リスボンの7日間の旅程"'
+                ],
+                placeholder: "メッセージを入力してください...",
+                initialMessage: "こんにちは！私はあなたの旅行アシスタントです。今日はどのようにお手伝いできますか？",
+                statsTitle: "グローバルシステム稼働中",
+                statLabels: {
+                    languages: "言語",
+                    users: "ユーザー",
+                    chats: "会話",
+                    available: "利用可能"
+                }
+            },
+            zh: {
+                subtitle: "The Poetic Suitcase - 您的个人旅行秘书",
+                langLabel: "选择您的语言:",
+                welcomeTitle: "欢迎使用您的智能旅行助手！",
+                welcomeText: "我是您的AI驱动个人旅行助手。我可以帮助您规划旅行、寻找酒店、推荐目的地等等。我会说12种不同的语言！",
+                examplesTitle: "我能做的事情示例:",
+                examples: [
+                    '"我想八月去东京旅行"',
+                    '"我需要在巴黎为3人预订酒店"',
+                    '"寻找欧洲旅行保险"',
+                    '"去日本的最佳时间是什么时候？"',
+                    '"里斯本7天行程安排"'
+                ],
+                placeholder: "输入您的消息...",
+                initialMessage: "您好！我是您的旅行助手。今天我能为您做些什么？",
+                statsTitle: "全球系统运行中",
+                statLabels: {
+                    languages: "语言",
+                    users: "用户",
+                    chats: "对话",
+                    available: "可用"
+                }
+            },
+            ar: {
+                subtitle: "The Poetic Suitcase - مساعدك الشخصي للسفر",
+                langLabel: "اختر لغتك:",
+                welcomeTitle: "مرحباً بك في مساعد السفر الذكي!",
+                welcomeText: "أنا مساعدك الشخصي للسفر المدعوم بالذكاء الاصطناعي. يمكنني مساعدتك في التخطيط للرحلات وإيجاد الفنادق واقتراح الوجهات وأكثر من ذلك بكثير. أتحدث 12 لغة مختلفة!",
+                examplesTitle: "أمثلة على ما يمكنني فعله:",
+                examples: [
+                    '"أريد السفر إلى طوكيو في أغسطس"',
+                    '"أحتاج فندق في باريس لـ 3 أشخاص"',
+                    '"أبحث عن تأمين سفر لأوروبا"',
+                    '"ما هو أفضل وقت لزيارة اليابان؟"',
+                    '"برنامج سياحي لمدة 7 أيام في لشبونة"'
+                ],
+                placeholder: "اكتب رسالتك...",
+                initialMessage: "مرحباً! أنا مساعد السفر الخاص بك. كيف يمكنني مساعدتك اليوم؟",
+                statsTitle: "النظام العالمي نشط",
+                statLabels: {
+                    languages: "اللغات",
+                    users: "المستخدمين",
+                    chats: "المحادثات",
+                    available: "متاح"
+                }
+            },
+            ru: {
+                subtitle: "The Poetic Suitcase - Ваш Личный Секретарь Путешествий",
+                langLabel: "Выберите ваш язык:",
+                welcomeTitle: "Добро пожаловать в ваш умный помощник по путешествиям!",
+                welcomeText: "Я ваш личный помощник по путешествиям на базе ИИ. Я могу помочь вам планировать поездки, находить отели, предлагать направления и многое другое. Я говорю на 12 разных языках!",
+                examplesTitle: "Примеры того, что я могу делать:",
+                examples: [
+                    '"Хочу поехать в Токио в августе"',
+                    '"Мне нужен отель в Париже на 3 человека"',
+                    '"Ищу страховку для поездки в Европу"',
+                    '"Когда лучше всего ехать в Японию?"',
+                    '"Маршрут на 7 дней в Лиссабоне"'
+                ],
+                placeholder: "Введите ваше сообщение...",
+                initialMessage: "Привет! Я ваш помощник по путешествиям. Как я могу помочь вам сегодня?",
+                statsTitle: "Глобальная Система Активна",
+                statLabels: {
+                    languages: "Языки",
+                    users: "Пользователи",
+                    chats: "Беседы",
+                    available: "Доступно"
+                }
+            },
+            ko: {
+                subtitle: "The Poetic Suitcase - 당신의 개인 여행 비서",
+                langLabel: "언어를 선택하세요:",
+                welcomeTitle: "지능형 여행 어시스턴트에 오신 것을 환영합니다!",
+                welcomeText: "저는 AI 기반 개인 여행 어시스턴트입니다. 여행 계획, 호텔 찾기, 목적지 추천 등을 도와드릴 수 있습니다. 12개 언어로 대화할 수 있어요!",
+                examplesTitle: "제가 할 수 있는 일의 예시:",
+                examples: [
+                    '"8월에 도쿄로 여행하고 싶어요"',
+                    '"파리에서 3명을 위한 호텔이 필요해요"',
+                    '"유럽 여행 보험을 찾고 있어요"',
+                    '"일본을 방문하기 가장 좋은 시기는 언제인가요?"',
+                    '"리스본 7일 여행 일정"'
+                ],
+                placeholder: "메시지를 입력하세요...",
+                initialMessage: "안녕하세요! 저는 당신의 여행 어시스턴트입니다. 오늘 어떻게 도와드릴까요?",
+                statsTitle: "글로벌 시스템 활성",
+                statLabels: {
+                    languages: "언어",
+                    users: "사용자",
+                    chats: "대화",
+                    available: "이용 가능"
+                }
+            },
+            hi: {
+                subtitle: "The Poetic Suitcase - आपका व्यक्तिगत यात्रा सचिव",
+                langLabel: "अपनी भाषा चुनें:",
+                welcomeTitle: "आपके बुद्धिमान यात्रा सहायक में आपका स्वागत है!",
+                welcomeText: "मैं आपका AI-संचालित व्यक्तिगत यात्रा सहायक हूं। मैं आपकी यात्रा की योजना बनाने, होटल ढूंढने, गंतव्यों का सुझाव देने और बहुत कुछ में मदद कर सकता हूं। मैं 12 अलग-अलग भाषाएं बोलता हूं!",
+                examplesTitle: "मैं क्या कर सकता हूं इसके उदाहरण:",
+                examples: [
+                    '"मैं अगस्त में टोक्यो की यात्रा करना चाहता हूं"',
+                    '"मुझे पेरिस में 3 लोगों के लिए होटल चाहिए"',
+                    '"यूरोप के लिए यात्रा बीमा की तलाश कर रहा हूं"',
+                    '"जापान जाने का सबसे अच्छा समय कब है?"',
+                    '"लिस्बन के लिए 7 दिनों का यात्रा कार्यक्रम"'
+                ],
+                placeholder: "अपना संदेश टाइप करें...",
+                initialMessage: "नमस्ते! मैं आपका यात्रा सहायक हूं। आज मैं आपकी कैसे मदद कर सकता हूं?",
+                statsTitle: "वैश्विक सिस्टम सक्रिय",
+                statLabels: {
+                    languages: "भाषाएं",
+                    users: "उपयोगकर्ता",
+                    chats: "बातचीत",
+                    available: "उपलब्ध"
+                }
+            }
+        };
+        
+        // Update language function
+        function updateLanguage(lang) {
+            currentLanguage = lang;
+            const t = translations[lang] || translations.pt;
+
+            // Update all text elements
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('lang-label').textContent = t.langLabel;
+            document.getElementById('welcome-title').textContent = t.welcomeTitle;
+            document.getElementById('welcome-text').textContent = t.welcomeText;
+            document.getElementById('examples-title').textContent = t.examplesTitle;
+            document.getElementById('chat-input').placeholder = t.placeholder;
+            document.getElementById('stats-title').textContent = t.statsTitle;
+
+            // Clear and rebuild examples list
+            const examplesList = document.getElementById('examples-list');
+            examplesList.innerHTML = '';
+            t.examples.forEach(example => {
+                const li = document.createElement('li');
+                li.textContent = example;
+                examplesList.appendChild(li);
+            });
+
+            // Update stat labels
+            document.getElementById('stat-languages').textContent = t.statLabels.languages;
+            document.getElementById('stat-users-label').textContent = t.statLabels.users;
+            document.getElementById('stat-chats-label').textContent = t.statLabels.chats;
+            document.getElementById('stat-available').textContent = t.statLabels.available;
+
+            // Update language buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Clear chat and add new initial message
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = `<div class="message assistant" id="initial-message">${t.initialMessage}</div>`;
+
+            // Create new session for each language change
+            sessionId = 'session_' + lang + '_' + Date.now();
+        }
+        
+        // Send message function
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            const chatMessages = document.getElementById('chat-messages');
+            const loading = document.getElementById('loading');
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = message;
+            chatMessages.appendChild(userMessage);
+            
+            // Clear input and show loading
+            input.value = '';
+            loading.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            try {
+                const response = await fetch(`${API_BASE}/chat/message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-User-Language': currentLanguage
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        message: message
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Add assistant response
+                const assistantMessage = document.createElement('div');
+                assistantMessage.className = 'message assistant';
+                assistantMessage.textContent = data.response || 'Desculpe, houve um erro. Tente novamente.';
+                chatMessages.appendChild(assistantMessage);
+                
+            } catch (error) {
+                const errorMessage = document.createElement('div');
+                errorMessage.className = 'message assistant';
+                errorMessage.textContent = 'Erro de conexão. Verifique se o servidor está rodando.';
+                chatMessages.appendChild(errorMessage);
+            } finally {
+                loading.style.display = 'none';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+        
+        // Load stats function
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/stats`);
+                const data = await response.json();
+                
+                if (data.users) document.getElementById('stat-users').textContent = data.users.toLocaleString();
+                if (data.totalChats) document.getElementById('stat-chats').textContent = data.totalChats.toLocaleString();
+            } catch (error) {
+                console.log('Could not load stats');
+            }
+        }
+        
+        // Event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                updateLanguage(btn.dataset.lang);
+            });
+        });
+        
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        
+        document.getElementById('chat-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Initialize on page load
+        updateLanguage('pt');
+        loadStats();
+    </script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPS Email Test - Railway API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .api-status {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+        }
+
+        .test-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .test-section p {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .response {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            display: none;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .response.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .response.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e0e0e0;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #1976d2;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛩️ TPS Email Test</h1>
+            <p>Teste dos endpoints de email da API Railway</p>
+        </div>
+
+        <div class="api-status" id="apiStatus">
+            <span class="status-dot"></span>
+            <strong>API Status:</strong> Checking connection...
+        </div>
+
+        <div class="info-box">
+            <strong>🔧 Como usar:</strong> Preencha os campos e clique nos botões para testar cada endpoint de email. 
+            Verifique sua caixa de entrada (e spam) após enviar.
+        </div>
+
+        <!-- Test 1: Verification Email -->
+        <div class="test-section">
+            <h3>📧 1. Teste Email de Verificação</h3>
+            <p>Endpoint: <code>POST /api/send-verification</code></p>
+            
+            <div class="form-group">
+                <label for="verifyEmail">Seu Email:</label>
+                <input type="email" id="verifyEmail" placeholder="seu-email@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="verifyName">Seu Nome:</label>
+                <input type="text" id="verifyName" placeholder="Richard Ji" required>
+            </div>
+            
+            <button class="btn" onclick="sendVerificationEmail()">Enviar Email de Verificação</button>
+            
+            <div class="loading" id="loading1">
+                <div class="loading-spinner"></div>
+                <span>Enviando email...</span>
+            </div>
+            
+            <div class="response" id="response1"></div>
+        </div>
+
+        <!-- Test 2: Welcome Email -->
+        <div class="test-section">
+            <h3>🎉 2. Teste Email de Boas-vindas</h3>
+            <p>Endpoint: <code>POST /api/send-welcome</code></p>
+            
+            <div class="form-group">
+                <label for="welcomeEmail">Seu Email:</label>
+                <input type="email" id="welcomeEmail" placeholder="seu-email@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="welcomeName">Seu Nome:</label>
+                <input type="text" id="welcomeName" placeholder="Richard Ji" required>
+            </div>
+            
+            <button class="btn" onclick="sendWelcomeEmail()">Enviar Email de Boas-vindas</button>
+            
+            <div class="loading" id="loading2">
+                <div class="loading-spinner"></div>
+                <span>Enviando email...</span>
+            </div>
+            
+            <div class="response" id="response2"></div>
+        </div>
+
+        <!-- Test 3: Custom Email -->
+        <div class="test-section">
+            <h3>✉️ 3. Teste Email Personalizado</h3>
+            <p>Endpoint: <code>POST /api/send-email</code></p>
+            
+            <div class="form-group">
+                <label for="customEmail">Destinatário:</label>
+                <input type="email" id="customEmail" placeholder="seu-email@gmail.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customSubject">Assunto:</label>
+                <input type="text" id="customSubject" placeholder="Teste da API TPS" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="customMessage">Mensagem:</label>
+                <textarea id="customMessage" placeholder="Digite sua mensagem aqui..." required></textarea>
+            </div>
+            
+            <button class="btn" onclick="sendCustomEmail()">Enviar Email Personalizado</button>
+            
+            <div class="loading" id="loading3">
+                <div class="loading-spinner"></div>
+                <span>Enviando email...</span>
+            </div>
+            
+            <div class="response" id="response3"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'https://tps-railway-api-production.up.railway.app';
+
+        // Check API status
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/status`);
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('apiStatus').innerHTML = `
+                        <span class="status-dot"></span>
+                        <strong>API Status:</strong> ${data.status} (v${data.version}) - Email endpoints ready!
+                    `;
+                } else {
+                    throw new Error('API unavailable');
+                }
+            } catch (error) {
+                document.getElementById('apiStatus').innerHTML = `
+                    <span style="background: #f44336;" class="status-dot"></span>
+                    <strong>API Status:</strong> Connection failed - ${error.message}
+                `;
+                console.error('API check failed:', error);
+            }
+        }
+
+        function showLoading(loadingId) {
+            document.getElementById(loadingId).style.display = 'block';
+        }
+
+        function hideLoading(loadingId) {
+            document.getElementById(loadingId).style.display = 'none';
+        }
+
+        function showResponse(responseId, data, isError = false) {
+            const responseDiv = document.getElementById(responseId);
+            responseDiv.textContent = JSON.stringify(data, null, 2);
+            responseDiv.className = `response ${isError ? 'error' : 'success'}`;
+            responseDiv.style.display = 'block';
+        }
+
+        // Test 1: Send verification email
+        async function sendVerificationEmail() {
+            const email = document.getElementById('verifyEmail').value;
+            const name = document.getElementById('verifyName').value;
+
+            if (!email || !name) {
+                alert('Por favor, preencha email e nome');
+                return;
+            }
+
+            showLoading('loading1');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/send-verification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        name: name,
+                        token: `TPS_${Date.now()}`
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading('loading1');
+                
+                if (response.ok) {
+                    showResponse('response1', data, false);
+                    console.log('✅ Verification email sent successfully');
+                } else {
+                    showResponse('response1', data, true);
+                    console.error('❌ Verification email failed');
+                }
+            } catch (error) {
+                hideLoading('loading1');
+                showResponse('response1', { error: error.message }, true);
+                console.error('Network error:', error);
+            }
+        }
+
+        // Test 2: Send welcome email
+        async function sendWelcomeEmail() {
+            const email = document.getElementById('welcomeEmail').value;
+            const name = document.getElementById('welcomeName').value;
+
+            if (!email || !name) {
+                alert('Por favor, preencha email e nome');
+                return;
+            }
+
+            showLoading('loading2');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/send-welcome`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        name: name
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading('loading2');
+                
+                if (response.ok) {
+                    showResponse('response2', data, false);
+                    console.log('✅ Welcome email sent successfully');
+                } else {
+                    showResponse('response2', data, true);
+                    console.error('❌ Welcome email failed');
+                }
+            } catch (error) {
+                hideLoading('loading2');
+                showResponse('response2', { error: error.message }, true);
+                console.error('Network error:', error);
+            }
+        }
+
+        // Test 3: Send custom email
+        async function sendCustomEmail() {
+            const email = document.getElementById('customEmail').value;
+            const subject = document.getElementById('customSubject').value;
+            const message = document.getElementById('customMessage').value;
+
+            if (!email || !subject || !message) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+
+            showLoading('loading3');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/send-email`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        to: email,
+                        subject: subject,
+                        text: message,
+                        html: `<h2>${subject}</h2><p>${message}</p><hr><small>Enviado via TPS Email API</small>`
+                    })
+                });
+
+                const data = await response.json();
+                hideLoading('loading3');
+                
+                if (response.ok) {
+                    showResponse('response3', data, false);
+                    console.log('✅ Custom email sent successfully');
+                } else {
+                    showResponse('response3', data, true);
+                    console.error('❌ Custom email failed');
+                }
+            } catch (error) {
+                hideLoading('loading3');
+                showResponse('response3', { error: error.message }, true);
+                console.error('Network error:', error);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 TPS Email Test initialized');
+            checkAPIStatus();
+
+            // Auto-fill email fields if they're empty
+            const defaultEmail = 'seu-email@gmail.com';
+            const defaultName = 'Richard Ji';
+            
+            document.getElementById('verifyEmail').value = defaultEmail;
+            document.getElementById('verifyName').value = defaultName;
+            document.getElementById('welcomeEmail').value = defaultEmail;
+            document.getElementById('welcomeName').value = defaultName;
+            document.getElementById('customEmail').value = defaultEmail;
+            document.getElementById('customSubject').value = 'Teste da API TPS';
+            document.getElementById('customMessage').value = 'Esta é uma mensagem de teste enviada através da API TPS Railway!\n\nSe você recebeu este email, significa que o sistema está funcionando perfeitamente! 🎉';
+        });
+    </script>
+</body>
+</html>
